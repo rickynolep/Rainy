@@ -33,8 +33,7 @@ client.on('messageCreate', async (message) => {
                     prompt = `(Membalas pesan: ${reference.content}) ${message.member.displayName}: ${prompt}`;
                 }
             }
-
-            console.log(`Prompt Diterima: ${prompt}`);
+            console.log(`\x1b[32m[P]\x1b[0m ${prompt}`);
             const model = genAI.getGenerativeModel({
                 model: "gemini-1.5-flash",
                 systemInstruction: systemInstruction,
@@ -44,9 +43,8 @@ client.on('messageCreate', async (message) => {
                 safetySettings,
                 history
             });
-
             const result = await chatSession.sendMessage(prompt);
-            console.log(`Respond Dibuat: ${result.response.text().trim()}`)
+            console.log(`\x1b[32m[R]\x1b[0m ${result.response.text().trim()}`);
             history.push({ role: "user", parts: [{ text: prompt }] });
             reply = await message.reply({ content: result.response.text().trim(), allowedMentions: { repliedUser: false }});
             history.push({ role: "model", parts: [{ text: result.response.text().trim() }] });
