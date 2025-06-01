@@ -1,0 +1,20 @@
+{
+    "name": "rainy",
+    "main": "dist/index.js",
+    "devDependencies": {
+        "@types/node": "^22.15.21",
+        "archiver": "^7.0.1",
+        "typescript": "^5.8.3"
+    },
+    "scripts": {
+        "dev": "bun run src/index.ts",
+        "build": "bun build src/index.ts --outdir dist --target bun --splitting --format esm --minify",
+        "archive": "bun build src/index.ts --outdir dist --target bun --splitting && bun run archiver.ts"
+    },
+    "type": "module",
+    "types": "dist/index.d.ts",
+    "dependencies": {
+        "discord.js": "^14.19.3",
+        "tsc": "^2.0.4"
+    }
+}
