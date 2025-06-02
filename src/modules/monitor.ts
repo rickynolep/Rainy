@@ -3,6 +3,7 @@ import { constants } from 'fs';
 import { Events, Message } from 'discord.js';
 import { access, mkdir, readFile, writeFile } from 'fs/promises';
 import { handleChat } from './chat';
+import { formatError, getModuleName, setWatchdog } from '@/watchdog';
 
 export default {
     name: Events.MessageCreate,
@@ -71,8 +72,10 @@ export default {
 
             existingData.push(messageData);
             await writeFile(historyFile, JSON.stringify(existingData, null, 2), 'utf-8');
+            setWatchdog(getModuleName(__filename), true);
         } catch (error) {
             console.error('messageCreate handler:', error);
+            setWatchdog(getModuleName(__filename), false, formatError(error));
         }
     },
 };
