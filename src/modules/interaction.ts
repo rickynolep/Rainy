@@ -7,7 +7,7 @@ export default {
         if (!interaction.isChatInputCommand()) return;
         const command = client.commands.get(interaction.commandName);
         if (!command) {
-            await interaction.reply({ content: "Command not found", ephemeral: true });
+            await interaction.reply({ content: 'Command not found', ephemeral: true });
             return;
         }
 

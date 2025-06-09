@@ -20,8 +20,5 @@ export async function setWatchdog(module: string, ok: boolean, error: string | n
     statuses[module] = { ok, error: ok ? null : error };
 }
 
-
-
-
 export function watchdog() {return statuses;}
 setWatchdog(path.basename(__filename, path.extname(__filename)), true);

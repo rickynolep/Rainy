@@ -23,7 +23,7 @@ for (const folder of commandsFolders) {
         if ('data' in command && 'execute' in command) {
             commands.push(command.data.toJSON())
         } else {
-            console.warn("\x1b[33m%s\x1b[0m", `[W] ${filePath} is missing data and(or) execute property`);
+            console.warn('\x1b[33m%s\x1b[0m', `[W] ${filePath} is missing data and(or) execute property`);
         }
     }
 }

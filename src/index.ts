@@ -13,17 +13,17 @@ const client = new Client({
     presence: {
         activities: [
             {
-                name: "Code Terminal",
+                name: 'Code Terminal',
                 type: ActivityType.Streaming
             },
-        ], status: "idle"
+        ], status: 'idle'
     }
 });
 
 export {client};
 
 client.commands = new Collection();
-const foldersPath = path.join(__dirname, "commands");
+const foldersPath = path.join(__dirname, 'commands');
 const commandFolders = fs.readdirSync(foldersPath).filter(f => fs.statSync(path.join(foldersPath, f)).isDirectory());
 for (const folder of commandFolders) {
     const commandsPath = path.join(foldersPath, folder);
@@ -34,7 +34,7 @@ for (const folder of commandFolders) {
         if ('data' in command && 'execute' in command) {
             client.commands.set(command.data.name, command);
         } else {
-            console.warn("\x1b[33m%s\x1b[0m", `[W] ${filePath} is missing data and(or) execute property`);
+            console.warn('\x1b[33m%s\x1b[0m', `[W] ${filePath} is missing data and(or) execute property`);
         }
     }
 }
@@ -54,10 +54,10 @@ for (const file of eventFiles) {
 
 client.login(process.env.DISCORD_TOKEN);
 client.once('ready', () => {
-    console.log("\x1b[32m%s\x1b[0m", `[I] Connected as ${client.user!.tag}`)
+    console.log('\x1b[32m%s\x1b[0m', `[I] Connected as ${client.user!.tag}`)
     client.user?.setActivity({
-        name: "Code Terminal",
+        name: 'Code Terminal',
         type: ActivityType.Streaming,
-        url: "https://www.twitch.tv/lofigirl",
+        url: 'https://www.twitch.tv/lofigirl',
     });
 });
