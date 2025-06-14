@@ -51,7 +51,6 @@ for (const file of eventFiles) {
 		client.on(event.name, (...args) => event.execute(...args, client));
 	}
 }
-
 client.login(process.env.DISCORD_TOKEN);
 client.once('ready', () => {
     console.log('\x1b[32m%s\x1b[0m', `[I] Connected as ${client.user!.tag}`)

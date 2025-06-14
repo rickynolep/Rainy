@@ -1,6 +1,6 @@
 import { watchdog } from '@/watchdog';
 import { SlashCommandBuilder, CommandInteraction, EmbedBuilder } from 'discord.js';
-import capitalize from '@/function/markup'
+import capitalize from '@/function/tools/markup'
 
 export default {
   data: new SlashCommandBuilder()
@@ -11,7 +11,7 @@ export default {
     try {
         const watchData = watchdog();
         const displayedWatchdog: string[] = [];
-        const allModules = ['watchdog', 'monitor', 'interaction', 'readline']; // <-- nama modul yang ingin ditampilkan urut
+        const allModules = ['watchdog', 'monitor', 'interaction', 'readline']; // will fix module later
 
         allModules.forEach((moduleName) => {
         const status = watchData[moduleName];
@@ -41,3 +41,4 @@ export default {
     }
   },
 };
+

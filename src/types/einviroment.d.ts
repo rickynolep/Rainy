@@ -5,6 +5,8 @@ declare global {
             CLIENT_ID: string;
             GEMINI_KEY: string;
             GEMINI_KEY2?: string;
+            OSU_CLIENT?: number;
+            OSU_SECRET?: string;
         }
     }
 }

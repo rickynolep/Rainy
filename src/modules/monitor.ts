@@ -1,7 +1,7 @@
 import { Events, Message } from 'discord.js';
-import { handleChat } from '../function/chat';
+import { handleChat } from '../function/core/chat';
 import { formatError, getModuleName, setWatchdog } from '@/watchdog';
-import writeMemory from '@/function/writeMemory';
+import writeMemory from '@/function/core/writeMemory';
 
 export default {
     name: Events.MessageCreate,
@@ -11,9 +11,11 @@ export default {
             if (!message.content || message.content.trim() === '') return;
             if (message.author.id === client.user?.id) return;
 
-            writeMemory(message, 'user');
+            await writeMemory(message, 'user');
             if (message.mentions.users.has(client.user!.id)) {
                 handleChat(message);
+            } else {
+                writeMemory(message, 'dummy');
             }
 
             setWatchdog(getModuleName(__filename), true);

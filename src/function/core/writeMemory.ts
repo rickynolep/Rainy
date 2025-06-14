@@ -3,7 +3,7 @@ import { access, mkdir, readFile, writeFile } from 'fs/promises';
 import { constants } from 'fs';
 import path from 'path';
 
-export default async function writeMemory(message: any, role: 'user' | 'model') {
+export default async function writeMemory(message: any, role: 'user' | 'model' | 'dummy') {
     let messageContent: string = message.content;
     if (message.mentions.members && message.mentions.members.size > 0) {
         message.mentions.members.forEach((member: any) => {
@@ -12,24 +12,45 @@ export default async function writeMemory(message: any, role: 'user' | 'model') 
         });
     };
 
+    let messageData: Object;
     const date = new Date(message.createdAt);
     const currentDate = date.toLocaleString('id-ID', {timeZone: 'Asia/Makassar'});
-    const messageData = {
-        role: role,
-        parts: [
-            {
-                text:
-                `Server ID: ${message.guildId}\n` +
-                `Server Name: ${message.guild?.name}\n` +
-                `Channel ID: ${message.channel.id}\n` +
-                `Channel Name: ${'name' in message.channel ? message.channel.name : 'Unknown'}\n` +
-                `Display Name: ${message.member?.displayName ?? 'Unknown'}\n` +
-                `Username: ${message.author.username}\n` +
-                `Date: ${currentDate} WITA\n` +
-                `Content: ${messageContent}`
-            }
-        ]
-    };
+    if (role === 'user') {
+        messageData = {
+            role: role,
+            parts: [
+                {
+                    text:
+                    `Server ID: ${message.guildId}\n` +
+                    `Server Name: ${message.guild?.name}\n` +
+                    `Channel ID: ${message.channel.id}\n` +
+                    `Channel Name: ${'name' in message.channel ? message.channel.name : 'Unknown'}\n` +
+                    `Display Name: ${message.member?.displayName ?? 'Unknown'}\n` +
+                    `Username: ${message.author.username}\n` +
+                    `Date: ${currentDate} WITA\n` +
+                    `Content: ${messageContent}`
+                }
+            ]
+        }
+    } else if (role === 'model') {
+            messageData = {
+            role: role,
+            parts: [
+                {
+                    text: messageContent
+                }
+            ]
+        }
+    } else {
+        messageData = {
+            role: 'model',
+            parts: [
+                {
+                    text: ''
+                }
+            ]
+        }
+    }
 
     const rootPath = path.resolve(__dirname, '..', '..');
     const cachePath = path.join(rootPath, 'cache');

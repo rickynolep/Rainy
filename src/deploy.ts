@@ -18,7 +18,7 @@ for (const folder of commandsFolders) {
             disabledFiles.push(file);
             continue;
         }
-        const rawCommand = require(filePath);
+        const rawCommand = await import(filePath);
         const command = rawCommand.default || rawCommand;
         if ('data' in command && 'execute' in command) {
             commands.push(command.data.toJSON())
