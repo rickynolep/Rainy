@@ -3,7 +3,7 @@ import { access, mkdir, readFile, writeFile } from 'fs/promises';
 import { constants } from 'fs';
 import path from 'path';
 
-export default async function writeMemory(message: any, role: 'user' | 'model' | 'dummy') {
+export default async function writeMemory(message: any, role: 'user' | 'model' ) {
     let messageContent: string = message.content;
     if (message.mentions.members && message.mentions.members.size > 0) {
         message.mentions.members.forEach((member: any) => {
@@ -32,7 +32,7 @@ export default async function writeMemory(message: any, role: 'user' | 'model' |
                 }
             ]
         }
-    } else if (role === 'model') {
+    } else {
             messageData = {
             role: role,
             parts: [
@@ -41,18 +41,9 @@ export default async function writeMemory(message: any, role: 'user' | 'model' |
                 }
             ]
         }
-    } else {
-        messageData = {
-            role: 'model',
-            parts: [
-                {
-                    text: ''
-                }
-            ]
-        }
     }
 
-    const rootPath = path.resolve(__dirname, '..', '..');
+    const rootPath = path.resolve(__dirname, '..', '..', '..');
     const cachePath = path.join(rootPath, 'cache');
     const historyFile = path.join(cachePath, `${message.guildId}.json`);
     let existingData: any [] = [];

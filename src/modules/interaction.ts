@@ -5,7 +5,6 @@ import { Events, MessageFlags } from 'discord.js';
 export default {
     name: Events.InteractionCreate,
     async execute(interaction: any, client: any) {
-        // Cek Slash Command
         if (interaction.isChatInputCommand()) {
             const command = client.commands.get(interaction.commandName);
             if (!command) {

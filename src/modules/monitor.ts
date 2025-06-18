@@ -14,8 +14,6 @@ export default {
             await writeMemory(message, 'user');
             if (message.mentions.users.has(client.user!.id)) {
                 handleChat(message);
-            } else {
-                writeMemory(message, 'dummy');
             }
 
             setWatchdog(getModuleName(__filename), true);
