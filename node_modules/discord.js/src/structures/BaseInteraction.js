@@ -122,6 +122,12 @@ class BaseInteraction extends Base {
      * @type {?InteractionContextType}
      */
     this.context = data.context ?? null;
+
+    /**
+     * Attachment size limit in bytes
+     * @type {number}
+     */
+    this.attachmentSizeLimit = data.attachment_size_limit;
   }
 
   /**
@@ -216,6 +222,16 @@ class BaseInteraction extends Base {
     return (
       this.type === InteractionType.ApplicationCommand &&
       [ApplicationCommandType.User, ApplicationCommandType.Message].includes(this.commandType)
+    );
+  }
+
+  /**
+   * Indicates whether this interaction is a {@link PrimaryEntryPointCommandInteraction}
+   * @returns {boolean}
+   */
+  isPrimaryEntryPointCommand() {
+    return (
+      this.type === InteractionType.ApplicationCommand && this.commandType === ApplicationCommandType.PrimaryEntryPoint
     );
   }
 

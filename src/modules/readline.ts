@@ -1,7 +1,8 @@
 import readline from 'readline';
-import { client } from '@/index';
+import { client } from '../index';
 import { TextChannel } from 'discord.js';
-import { getModuleName, setWatchdog } from '@/watchdog';
+import { getModuleName, setWatchdog } from '../watchdog';
+import { deploySlash } from '../deploy';
 
 let currentChannel: TextChannel | null = null;
 
@@ -32,6 +33,9 @@ rl.on('line', async (input) => {
         }
         rl.prompt();
         return;
+    }
+    if (trimmed === 'deploy') {
+        deploySlash()
     }
 
     // Step 2: send message or reply

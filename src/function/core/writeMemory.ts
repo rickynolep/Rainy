@@ -1,4 +1,4 @@
-import { getModuleName, setWatchdog } from '@/watchdog';
+import { getModuleName, setWatchdog } from '../../watchdog';
 import { access, mkdir, readFile, writeFile } from 'fs/promises';
 import { constants } from 'fs';
 import path from 'path';

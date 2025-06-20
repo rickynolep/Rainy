@@ -1,4 +1,4 @@
-import { formatError, getModuleName, setWatchdog } from '@/watchdog';
+import { formatError, getModuleName, setWatchdog } from '../../watchdog';
 import gemini from './gemini';
 import fs from 'fs/promises';
 import writeMemory from './writeMemory';

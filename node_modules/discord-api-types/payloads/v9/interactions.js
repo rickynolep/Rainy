@@ -15,10 +15,5 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./_interactions/applicationCommands"), exports);
-__exportStar(require("./_interactions/autocomplete"), exports);
-__exportStar(require("./_interactions/base"), exports);
-__exportStar(require("./_interactions/messageComponents"), exports);
-__exportStar(require("./_interactions/modalSubmit"), exports);
-__exportStar(require("./_interactions/ping"), exports);
 __exportStar(require("./_interactions/responses"), exports);
 //# sourceMappingURL=interactions.js.map

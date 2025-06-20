@@ -1,6 +1,6 @@
-import { watchdog } from '@/watchdog';
+import { watchdog } from '../../watchdog';
 import { SlashCommandBuilder, CommandInteraction, EmbedBuilder } from 'discord.js';
-import capitalize from '@/function/tools/markup'
+import capitalize from '../../function/tools/markup'
 
 export default {
   data: new SlashCommandBuilder()

@@ -1,7 +1,7 @@
 import { Events, Message } from 'discord.js';
 import { handleChat } from '../function/core/chat';
-import { formatError, getModuleName, setWatchdog } from '@/watchdog';
-import writeMemory from '@/function/core/writeMemory';
+import { formatError, getModuleName, setWatchdog } from '../watchdog';
+import writeMemory from '../function/core/writeMemory';
 
 export default {
     name: Events.MessageCreate,

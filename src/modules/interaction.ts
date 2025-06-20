@@ -1,5 +1,5 @@
-import clickRace from '@/commands/admin/clickRace';
-import { formatError, getModuleName, setWatchdog, watchdog } from '@/watchdog';
+import clickRace from '../commands/tools/clickRace';
+import { formatError, getModuleName, setWatchdog, watchdog } from '../watchdog';
 import { Events, MessageFlags } from 'discord.js';
 
 export default {

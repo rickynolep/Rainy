@@ -1,19 +1,15 @@
 {
-    "compilerOptions": {
-        "target": "ES2020",
-        "module" : "ESNext",
-        "moduleResolution": "node",
-        "strict": true,
-        "esModuleInterop": true,
-        "skipLibCheck": true,
-        "forceConsistentCasingInFileNames": true,
-        "typeRoots": ["src/types", "node_modules/@types"],
-        "outDir": "dist",
-        "baseUrl": "./src",
-        "paths": {
-            "@/*": ["*"]
-        }, 
-    },
-    "include": ["src"],
-    "exclude": ["node_modules", "dist"]
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "dist",
+    "typeRoots": ["src/types", "node_modules/@types"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
 }
