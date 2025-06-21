@@ -1,4 +1,4 @@
 # General Configurations
 # Some Configurations can be set to false (disabled)
-status: false
-statusName: capek
+status: true
+statusName: Code Terminal

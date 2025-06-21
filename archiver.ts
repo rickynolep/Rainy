@@ -10,20 +10,22 @@ const month = now.getMonth() + 1;
 const year = now.getFullYear();
 
 const version = '2';
-const zipName = `Rainy v${version}.${year % 100}.${month}.${date} (${hour}.${minutes}).zip`;
+const zipName = `v${version}.${year % 100}.${month}.${date} (${hour}.${minutes}).zip`;
 const outputDir = 'export';
 const outputPath = path.join(outputDir, zipName);
-if (!fs.existsSync(outputDir)) {fs.mkdirSync(outputDir);}
+if (!fs.existsSync(outputDir)) {fs.mkdirSync(outputDir)};
 
 const output = fs.createWriteStream(outputPath);
-// @ts-ignore <-- bener kok harusnya engga pake vending
 const archive = archiver('zip', { zlib: { level: 9 } });
 
 output.on('close', () => {console.log(`Finished compressing ${zipName}. Total size: ${archive.pointer()} bytes`)});
 archive.on('error', (err) => {throw err});
 
 archive.pipe(output);
-archive.directory('dist/', 'dist'); 
+archive.glob('**/*', { cwd: 'dist' });
+
 archive.file('package.json', { name: 'package.json' });
 archive.file('.env', { name: '.env' });
+archive.file('config.yaml', { name: 'config.yaml' });
+archive.file('personality.txt', { name: 'personality.txt' });
 archive.finalize();

@@ -3,15 +3,21 @@
     "main": "dist/index.js",
     "type": "module",
     "dependencies": {
-        "@google/genai": "^1.5.1",
+        "@google/genai": "^1.6.0",
         "discord.js": "^14.20.0",
+        "dotenv": "^16.5.0",
         "osu-api-v2-js": "^2.0.1",
         "yaml": "^2.8.0"
     },
     "devDependencies": {
-        "@types/node": "^24.0.3"
+        "@types/archiver": "^6.0.3",
+        "@types/node": "^24.0.3",
+        "archiver": "^7.0.1",
+        "typescript": "^5.8.3"
     },
     "scripts": {
-        "dev": "bun run src/index.ts"
+        "dev": "bun run src/index.ts",
+        "slash": "bun run src/function/deploy.ts",
+        "buildbot": "bun tsc && bun archiver.ts"
     }
 }

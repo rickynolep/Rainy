@@ -1,19 +1,26 @@
 import fs from 'fs';
 import path from 'path';
 import YAML from 'yaml';
-import type { Config } from './types/config';
+import dotenv from 'dotenv';
+import type { Config } from './types/config.js';
+import { fileURLToPath, pathToFileURL } from 'url';
 import { Client, GatewayIntentBits, Collection } from 'discord.js';
 
-let confPath: string = '';
-if (fs.existsSync(path.resolve(__dirname, 'config.yaml'))) {
-    confPath = path.resolve(__dirname, 'config.yaml');
-} else { 
-    confPath = path.resolve(__dirname, '../config.yaml');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const colorlog = {
+    dim: '\x1b[2m%s\x1b[0m',
+    yellow: '\x1b[33m%s\x1b[0m',
+    green: '\x1b[32m%s\x1b[0m'
 }
 
+dotenv.config({ path: path.join(process.cwd(), '.env') }) 
+
 try {
+    const confPath = path.join(process.cwd(), 'config.yaml')
     const raw = fs.readFileSync(confPath, 'utf-8');
     globalThis.config = YAML.parse(raw) as Config;
+    globalThis.colorLog = colorlog
 } catch {
     console.error('Failed to load Config file (YAML), Is it missing?');
     process.exit();
@@ -28,8 +35,8 @@ const client = new Client({
         GatewayIntentBits.MessageContent
     ],
 }); 
-export { client };
 
+export { client };
 async function main() {
     client.commands = new Collection();
     const foldersPath = path.join(__dirname, 'commands');
@@ -41,11 +48,11 @@ async function main() {
         const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.ts') || file.endsWith('.js'));
         for (const file of commandFiles) {
             const filePath = path.join(commandsPath, file);
-            const command = await import(filePath).then(mod => mod.default || mod);
+            const command = await import(pathToFileURL(filePath).href).then(mod => mod.default || mod);
             if ('data' in command && 'execute' in command) {
                 client.commands.set(command.data.name, command);
             } else {
-                console.warn(warnLog, `[W] ${filePath} is missing data and/or execute`);
+                console.warn(colorLog.yellow, `[W] ${filePath} is missing data and/or execute`);
             }
         }
     }
@@ -55,7 +62,7 @@ async function main() {
     
     for (const file of eventFiles) {
         const filePath = path.join(eventsPath, file);
-        const event = await import(filePath).then(mod => mod.default || mod);
+        const event = await import(pathToFileURL(filePath).href).then(mod => mod.default || mod);
         if (event.once) {
             client.once(event.name, (...args) => event.execute(...args, client));
         } else {
@@ -72,8 +79,7 @@ async function main() {
         CLIENT_ID = "13xxxxxxxx"                - [Your Discord Client ID]
         OSU_CLIENT = "xxxxx"                    - [Your Osu Client ID] (optional)
         OSU_SECRET = "1xxxxxxxxxx"              - [Your Osu Secret] (optional)\n`
-        );
-        return;
+        ); return;
     }
 }
 

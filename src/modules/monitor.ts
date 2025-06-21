@@ -1,7 +1,6 @@
 import { Events, Message } from 'discord.js';
-import { handleChat } from '../function/core/chat';
-import { formatError, getModuleName, setWatchdog } from '../watchdog';
-import writeMemory from '../function/core/writeMemory';
+import { handleChat } from '../function/chat.js';
+import writeMemory from '../function/writeMemory.js';
 
 export default {
     name: Events.MessageCreate,
@@ -15,11 +14,8 @@ export default {
             if (message.mentions.users.has(client.user!.id)) {
                 handleChat(message);
             }
-
-            setWatchdog(getModuleName(__filename), true);
         } catch (error) {
             console.error('messageCreate handler:', error);
-            setWatchdog(getModuleName(__filename), false, formatError(error));
         }
     },
 };
