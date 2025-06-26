@@ -11,13 +11,18 @@ interface ColorLog {
 
 interface Config {
     statusName: string,
-    status: false | string
+    status: false | string,
+    alwaysRespond: array,
+    alwaysIgnoreSymbol: string,
+    compatibilityMode: boolean
 }
 
 interface GeminiConfig {
     thinkingConfig?: ThinkingConfig;
     responseMimeType: string;
-    systemInstruction: { text: string }[];
+    systemInstruction: { 
+        text: string 
+    } [];
 }
 
 export {

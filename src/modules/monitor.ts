@@ -11,7 +11,11 @@ export default {
             if (message.author.id === client.user?.id) return;
 
             await writeMemory(message, 'user');
-            if (message.mentions.users.has(client.user!.id)) {
+            if (
+            config.alwaysRespond.includes(message.channel.id) && !message.content.trim().startsWith(config.alwaysIgnoreSymbol) || 
+            (message.mentions.has(message.author) && !message.mentions.everyone) ||
+            message.mentions.users.has(client.user!.id)
+            ) {
                 handleChat(message);
             }
         } catch (error) {

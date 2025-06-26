@@ -41,8 +41,9 @@ export async function deploySlash() {
                 console.log(`\x1b[33m[I] Ignoring ${disabledFiles.length} disabled files.`);
             }
             console.log(`\x1b[32mSuccessfully reloaded ${data.length} application (/) commands.\x1b[0m`);
-        } catch (error) {
-            console.error(error);
+        } catch (e) {
+            console.error('[E] Slash Command Deploy Failed');
+            console.error(e);
         }
     })();
 }

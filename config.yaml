@@ -1,4 +1,10 @@
 # General Configurations
 # Some Configurations can be set to false (disabled)
-status: true
+status: listening
 statusName: Code Terminal
+
+# AI Configurations
+autoRespond: []
+alwaysRespond: ['1230804584235274291'] # Always Respond to these channel
+alwaysIgnoreSymbol: '-#' # Always ignore if contains specified character at start
+compatibilityMode: false # Will disable config check, set to true if your vps can't run the script

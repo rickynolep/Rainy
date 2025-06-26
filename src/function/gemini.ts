@@ -2,14 +2,14 @@ import fs from 'fs';
 import { GoogleGenAI } from '@google/genai'
 import { GeminiConfig } from '../types/config.js';
 
-export default async function gemini (data: Object, type: string) {
+export default async function gemini(data: Object, type: string, tries = 1): Promise<string> {
     try {
-        let result: string = ''
+        let result: string = '';
         const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_KEY });
-        const model = 'gemini-2.5-flash-preview-05-20';
+        const model = 'gemini-2.5-flash';
         const contents = data;
-        let config: GeminiConfig = { responseMimeType: 'text/plain', systemInstruction: [{ text: `` }]}
-        const personality = fs.readFileSync('./personality.txt', 'utf8')
+        let config: GeminiConfig = { responseMimeType: 'text/plain', systemInstruction: [{ text: `` }]};
+        const personality = fs.readFileSync('./personality.txt', 'utf8');
         if (type === 'define') {
             config.systemInstruction = [
                 {
@@ -22,14 +22,25 @@ export default async function gemini (data: Object, type: string) {
             ];
         } else if (type === 'chat') {
             config.thinkingConfig = { thinkingBudget: 0 };
-            config.systemInstruction = [{ text: personality }]
+            config.systemInstruction = [{ text: personality }];
         } else {
-            config.systemInstruction = [{ text: 'Throw UNKNOWN Response'}]
-            console.log('unknown type function!' + prompt)
+            config.systemInstruction = [{ text: 'Throw UNKNOWN Response'}];
+            console.log('unknown type function!' + type);
         }
 
         const response = await ai.models.generateContentStream({ model, config, contents });
-        for await (const chunk of response) { if (chunk.text) { result += chunk.text } };
+        for await (const chunk of response) { if (chunk.text) { result += chunk.text } }
         return result;
-    } catch (e) { console.error(e) }
+    } catch (e) { 
+        console.error('[E] Gemini Failed');
+        if (typeof e === 'object' && e !== null && 'message' in e && typeof (e as any).message === 'string' && (e as any).message.includes('Too Many Request')) {
+                console.error('[E] Too Many Request')
+        } else {
+            console.error(e);
+        }
+        if (tries < 3) {
+            return await gemini(data, type, tries + 1);
+        }
+        return `-# an error occured, retried ${tries} times`;
+    }
 }
