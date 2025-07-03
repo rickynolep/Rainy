@@ -1,15 +1,18 @@
 import fs from 'fs/promises';
 import gemini from './gemini.js';
 import writeMemory from './writeMemory.js';
+import { getConfig } from './config.js';
 
 export async function handleChat(message: any) {
     try {
         message.channel.sendTyping();
         const rawHistory = await fs.readFile(`./cache/${message.guildId}.json`, 'utf8');
         let history = JSON.parse(rawHistory);
-        // Only take the last 20 messages
+        console.log(getConfig().contextLimit)
         if (Array.isArray(history)) {
-            history = history.slice(-20);
+            if (getConfig().contextLimit > 0) {
+                history = history.slice(-getConfig().contextLimit);
+            }
         }
         const result = await gemini(history, 'chat');
         const reply = await message.reply({ content: result, allowedMentions: { repliedUser: false } });

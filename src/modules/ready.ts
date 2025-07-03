@@ -1,14 +1,35 @@
-import { Events, ActivityType } from 'discord.js';
+import fs from 'fs';
+import path from 'path';
+import crypto from 'crypto'
+import { Events } from 'discord.js';
+import { refreshStatus } from '../function/config/status';
+let confPath: any, lastHash: any
+function getHash(content: string): string {
+  return crypto.createHash('sha256').update(content).digest('hex');
+}
+
+function refresh() {
+    try {
+        confPath = path.join(process.cwd(), 'config.yaml')
+        const raw = fs.readFileSync(confPath, 'utf8');
+        const hashed = getHash(raw); 
+        if (hashed === lastHash) return;
+        refreshStatus();
+        lastHash = hashed;
+    } catch (err) {
+        console.error('[E] Failed to refresh status\n', err);
+    }
+}
 
 export default {
     name: Events.ClientReady,
     async execute(client: any) {
-        console.log('\x1b[32m%s\x1b[0m', `[I] Connected as ${client.user!.tag}`);
-        if (config.status === false) { return }
-        client.user?.setActivity({
-            name: config.statusName,
-            type: ActivityType.Streaming,
-            url: 'https://www.twitch.tv/lofigirl',
+        refresh();
+        console.log(colorLog.green, `[I] Connected as ${client.user!.tag}`);
+        fs.watchFile(confPath!, (curr, prev) => {
+            if (curr.mtime !== prev.mtime) {
+                refresh();
+            }
         });
     }
 }

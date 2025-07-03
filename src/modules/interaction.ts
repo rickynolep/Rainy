@@ -19,7 +19,7 @@ export default {
                 console.error('[E]', error);
                 await interaction.reply({
                     content: 'Error! Console has been logged',
-                    ephemeral: true,
+                    flags: MessageFlags.Ephemeral
                 });
             }
         }

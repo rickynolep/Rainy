@@ -1,5 +1,4 @@
 declare global {
-    var config: Config
     var colorLog: ColorLog
 }
 
@@ -10,11 +9,18 @@ interface ColorLog {
 }
 
 interface Config {
-    statusName: string,
-    status: false | string,
+    debugMode: boolean,
+    compatibilityMode: boolean,
+    status: string,
+    activity: false | string,
+    statusText: string | boolean,
+    statusUrl: string | boolean,
+    autoRespond: array,
+    autoRespondCooldown: number,
     alwaysRespond: array,
     alwaysIgnoreSymbol: string,
-    compatibilityMode: boolean
+    chatModel: string,
+    contextLimit: number,
 }
 
 interface GeminiConfig {

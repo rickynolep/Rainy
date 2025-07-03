@@ -1,12 +1,16 @@
 import fs from 'fs';
 import path from 'path';
 import readline from 'readline';
+import { fileURLToPath } from 'url';
+import { getConfig } from './config';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const osuCommandPath = path.resolve(__dirname, '../commands/user/osu.ts');
 const osuDisabledPath = osuCommandPath + '.disabled'
 let rl: any = '';
 
-if (config.compatibilityMode === false) {
+if (getConfig().compatibilityMode === false) {
     rl = readline.createInterface({
         input: process.stdin,
         output: process.stdout

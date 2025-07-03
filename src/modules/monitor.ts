@@ -1,6 +1,7 @@
 import { Events, Message } from 'discord.js';
 import { handleChat } from '../function/chat.js';
 import writeMemory from '../function/writeMemory.js';
+import { getConfig } from '../function/config.js';
 
 export default {
     name: Events.MessageCreate,
@@ -12,7 +13,7 @@ export default {
 
             await writeMemory(message, 'user');
             if (
-            config.alwaysRespond.includes(message.channel.id) && !message.content.trim().startsWith(config.alwaysIgnoreSymbol) || 
+            getConfig().alwaysRespond.includes(message.channel.id) && !message.content.trim().startsWith(getConfig().alwaysIgnoreSymbol) || 
             (message.mentions.has(message.author) && !message.mentions.everyone) ||
             message.mentions.users.has(client.user!.id)
             ) {

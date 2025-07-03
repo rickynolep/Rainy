@@ -1,12 +1,14 @@
 import fs from 'fs';
 import { GoogleGenAI } from '@google/genai'
 import { GeminiConfig } from '../types/config.js';
+import { getConfig } from './config.js';
+let chatModel = getConfig().chatModel
 
 export default async function gemini(data: Object, type: string, tries = 1): Promise<string> {
     try {
         let result: string = '';
         const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_KEY });
-        const model = 'gemini-2.5-flash';
+        const model = chatModel;
         const contents = data;
         let config: GeminiConfig = { responseMimeType: 'text/plain', systemInstruction: [{ text: `` }]};
         const personality = fs.readFileSync('./personality.txt', 'utf8');
