@@ -11,6 +11,12 @@ function detectPkgManager(): 'bun' | 'npm' | 'yarn' | 'pnpm' {
     return 'npm';
 }
 
+const colorlog = {
+    dim: '\x1b[2m%s\x1b[0m',
+    yellow: '\x1b[33m%s\x1b[0m',
+    green: '\x1b[32m%s\x1b[0m'
+};
+
 export function checkDeps() {
     if (!fs.existsSync(packageJsonPath)) return;
     const missingDeps: string[] = [];
@@ -34,4 +40,5 @@ export function checkDeps() {
     }
 }
 
+globalThis.colorLog = colorlog;
 checkDeps();

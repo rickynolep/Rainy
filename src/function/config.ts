@@ -3,16 +3,12 @@ import path from 'path';
 import { parseDocument, Document } from 'yaml';
 import crypto from 'crypto';
 import type { Config } from '../types/config';
+import { refreshSlash } from './config/slash';
 
 let confPath = path.join(process.cwd(), 'config.yaml');
 let configDoc: Document.Parsed;
 let configObj: Config;
 let lastHash = '';
-const colorlog = {
-    dim: '\x1b[2m%s\x1b[0m',
-    yellow: '\x1b[33m%s\x1b[0m',
-    green: '\x1b[32m%s\x1b[0m'
-};
 
 function getHash(content: string): string {
     return crypto.createHash('sha256').update(content).digest('hex');
@@ -20,23 +16,28 @@ function getHash(content: string): string {
 
 function validateConfig(obj: any) {
     const requiredKeys = [
-        'debugMode',
+        'verbose',
         'compatibilityMode',
         'status',
         'activity',
         'statusText',
+        'statusSubText',
         'statusUrl',
+        'slashAI',
+        'chatModel',
+        'contextLimit',
+        'alwaysIgnoreSymbol',
         'autoRespond',
         'autoRespondCooldown',
         'alwaysRespond',
-        'alwaysIgnoreSymbol',
-        'chatModel',
-        'contextLimit'
+        'enablePing',
+        'enableOsu',
+        'enableAfk',
     ];
     let valid = true;
     for (const key of requiredKeys) {
         if (!(key in obj)) {
-            console.warn(colorlog.yellow, `[W] config.yaml missing key: ${key}`);
+            console.warn(colorLog.yellow, `[W] config.yaml missing key: ${key}`);
             valid = false;
         } else if (
             obj[key] === undefined || 
@@ -44,13 +45,13 @@ function validateConfig(obj: any) {
             (typeof obj[key] === 'string' && obj[key].trim() === '') ||
             (Array.isArray(obj[key]) && obj[key].length === 0)
         ) {
-            console.warn(colorlog.yellow, `[W] config.yaml key "${key}" is empty or undefined`);
+            console.warn(colorLog.yellow, `[W] config.yaml key "${key}" is empty or undefined`);
             valid = false;
         }
     }
     for (const key of Object.keys(obj)) {
         if (!requiredKeys.includes(key)) {
-            console.warn(colorlog.yellow, `[W] config.yaml has unknown key: ${key}`);
+            console.warn(colorLog.yellow, `[W] config.yaml has unknown key: ${key}`);
         }
     }
     return valid;
@@ -59,28 +60,35 @@ function validateConfig(obj: any) {
 function loadConfig() {
     try {
         const raw = fs.readFileSync(confPath, 'utf8');
-        const hashed = getHash(raw);
-        if (hashed === lastHash) return;
         configDoc = parseDocument(raw);
         configObj = configDoc.toJS() as Config;
         if (!validateConfig(configObj)) {
             console.error('[E] config.yaml structure is invalid! Please fix your config file.');
             process.exit(1);
         }
-
-        lastHash = hashed;
-        console.log(colorlog.dim, `[I] Reloaded config.yaml`);
+        if (getConfig().verbose) {console.log(colorLog.dim, `[I] Reloaded config.yaml`)};
     } catch (err) {
-        console.error('Failed to load Config file (YAML), is it missing or invalid?');
+        console.error('[E] Failed to load Config file (YAML), is it missing or invalid?');
         process.exit();
     }
 }
 
-loadConfig();
-globalThis.colorLog = colorlog;
+async function checkConfig() {
+    const raw = fs.readFileSync(confPath, 'utf8');
+    const hashed = getHash(raw);
+    if (hashed === lastHash) return;
+
+    loadConfig();
+    await refreshSlash();
+
+    lastHash = hashed;
+    
+}
+
+await checkConfig();
 fs.watchFile(confPath, (curr, prev) => {
     if (curr.mtime !== prev.mtime) {
-        loadConfig();
+        checkConfig();
     }
 });
 

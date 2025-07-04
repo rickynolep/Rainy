@@ -3,7 +3,7 @@ import { SlashCommandBuilder } from 'discord.js';
 export default { 
 	data: new SlashCommandBuilder()
 		.setName('ping')
-		.setDescription('Menguji kecepatan respon bot Rainy'),
+		.setDescription('Fetch bot ping and latency'),
 	async execute(interaction: any) {
         console.log("pass");
         const latencyraw = Date.now() - interaction.createdTimestamp;

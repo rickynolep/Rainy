@@ -2,10 +2,10 @@ import fs from 'fs';
 import path from 'path';
 import dotenv from 'dotenv';
 import { getConfig } from './function/config.js';
-import { osuCheck } from './function/osuCheck.js';
+import { osuCheck } from './function/config/osu.js';
 import { fileURLToPath, pathToFileURL } from 'url';
 import { Client, GatewayIntentBits, Collection } from 'discord.js';
-console.log(colorLog.dim, "[I] Check complete, running main file...");
+if (getConfig().verbose) {console.log(colorLog.dim, "[I] Check complete, running main file...")};
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.join(process.cwd(), '.env'), quiet: true });
@@ -66,7 +66,7 @@ async function main() {
             await client.login(process.env.DISCORD_TOKEN);
         } else {
             console.log('Environment Key(s) is missing (Discord Token) \nCreate new ".env" or import your env with these variable:\n', `  
-            DISCORD_TOKEN = "Mxxxxxxxxxxxxxxxxxxx"  - [Your Discord Token]
+            DISCORD_TOKEN = "MTxxxxxxxxxxxxxxxxxx"  - [Your Discord Token]
             GEMINI_KEY = "AIxxxxxxxx"               - [Your Gemini Key]
             CLIENT_ID = "13xxxxxxxx"                - [Your Discord Client ID]
             OSU_CLIENT = "xxxxx"                    - [Your Osu Client ID] (optional)

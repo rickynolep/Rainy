@@ -9,11 +9,13 @@ interface ColorLog {
 }
 
 interface Config {
-    debugMode: boolean,
+    slashAI: boolean,
+    verbose: boolean,
     compatibilityMode: boolean,
     status: string,
     activity: false | string,
     statusText: string | boolean,
+    statusSubText: string | boolean,
     statusUrl: string | boolean,
     autoRespond: array,
     autoRespondCooldown: number,
@@ -21,6 +23,9 @@ interface Config {
     alwaysIgnoreSymbol: string,
     chatModel: string,
     contextLimit: number,
+    enableOsu: boolean,
+    enableAfk: boolean,
+    enablePing: boolean
 }
 
 interface GeminiConfig {

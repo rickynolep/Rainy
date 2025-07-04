@@ -25,11 +25,11 @@ export default {
     name: Events.ClientReady,
     async execute(client: any) {
         refresh();
-        console.log(colorLog.green, `[I] Connected as ${client.user!.tag}`);
         fs.watchFile(confPath!, (curr, prev) => {
             if (curr.mtime !== prev.mtime) {
                 refresh();
             }
         });
+        console.log(colorLog.green, `[I] Connected as ${client.user!.tag}`);
     }
 }

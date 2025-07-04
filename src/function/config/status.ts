@@ -1,7 +1,7 @@
 import { getConfig, modifyConfig } from "../config.js";
 import { client } from "../../main.js";
 import { ActivityType, PresenceUpdateStatus } from "discord.js";
-let activityType: any, statusText: any, displayStatus: any, statusUrl: any;
+let activityType: any, statusText: any, displayStatus: any, statusUrl: any, statusSubText: any;
 
 export function refreshStatus() {
     if (getConfig().activity === false) {
@@ -16,7 +16,7 @@ export function refreshStatus() {
     } else if (getConfig().activity === 'Watching') {
         displayStatus = `${getConfig().activity} ${getConfig().statusText}`
         activityType = ActivityType.Watching
-    }else if (getConfig().activity === 'Streaming') {
+    } else if (getConfig().activity === 'Streaming') {
         displayStatus = `${getConfig().activity} ${getConfig().statusText}`
         activityType = ActivityType.Streaming
     } else if (getConfig().activity === 'Competing') {
@@ -29,34 +29,58 @@ export function refreshStatus() {
         activityType = ActivityType.Custom
     }
 
-
+    statusText = getConfig().statusText
+    statusSubText = getConfig().statusSubText
+    statusUrl = getConfig().statusUrl
     if (getConfig().activity !== false && getConfig().statusText === false) {
         console.warn(colorLog.yellow, '[W] Cannot disable statusText if activity is enabled! Disabling activity.')
         modifyConfig((doc) => { doc.set('activity', false)});
+    } else if (activityType === ActivityType.Custom) {
+        console.warn(colorLog.yellow, '[W] activity is required for statusSubText to work. Only statusText will be displayed!')
+        statusSubText = 'No substatus'
+        client.user?.setActivity({
+            type: ActivityType.Custom,
+            name: statusText
+        });
+    } else if (getConfig().statusSubText !== false && getConfig().statusText === false) {
+        console.warn(colorLog.yellow, '[W] statusText and activity is required for statusSubText to work. This will display nothing at all!')
+        statusText = 'No status'
+        statusSubText = 'No substatus'
+        client.user?.setActivity({
+            name: '',
+        });
     } else if (getConfig().activity === false && getConfig().statusText === false) {
         client.user?.setActivity({
             name: '',
         });
-    } else if (getConfig().statusUrl === false) {
-        statusText = getConfig().statusText
+    }  else if (getConfig().statusUrl === false && getConfig().statusSubText === false) {
         client.user?.setActivity({
             type: activityType,
             name: statusText,
-            state: statusText,
+        });
+    } else if (getConfig().statusUrl === false) {
+        client.user?.setActivity({
+            type: activityType,
+            name: statusText,
+            state: statusSubText
+        });
+    } else if (getConfig().statusSubText === false) {
+        client.user?.setActivity({
+            type: activityType,
+            name: statusText,
+            url: statusUrl
         });
     } else {
-        statusText = getConfig().statusText
-        statusUrl = getConfig().statusUrl
         client.user?.setActivity({
             type: activityType,
             name: statusText,
-            state: statusText,
+            state: statusSubText,
             url: statusUrl
         });
     }
 
     if (getConfig().activity === 'Streaming') {
-        console.log(colorLog.dim, `[I] Reloaded bot status (Streaming - ${displayStatus})`);
+        console.log(colorLog.dim, `[I] Reloaded bot status (Streaming - ${displayStatus}, ${statusSubText || 'No Subtext'})`);
     } else {
         if (getConfig().status === 'Online') {
             client.user?.setStatus(PresenceUpdateStatus.Online);
@@ -71,6 +95,8 @@ export function refreshStatus() {
             modifyConfig((doc) => { doc.set('status', 'Online')});
             client.user?.setStatus(PresenceUpdateStatus.Online);
         }
-        console.log(colorLog.dim, `[I] Reloaded bot status (${getConfig().status} - ${displayStatus || 'No Status'})`);
+        if (getConfig().verbose) {
+            console.log(colorLog.dim, `[I] Reloaded bot status (${getConfig().status} - ${displayStatus || 'No status'}, ${statusSubText || 'No substatus'})`)
+        };
     }
 }
