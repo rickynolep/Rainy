@@ -2,13 +2,14 @@ import fs from 'fs';
 import path from 'path';
 import { deploySlash } from "../deploy.js";
 import { getConfig } from '../config.js';
+import { ext } from '../bootstrap.js';
 let lastAdminDisabled: string[] = [];
 let lastUserDisabled: string[] = [];
 let firstCheck: boolean;
 
 function setSlash(hierarchy: 'user' | 'admin', filepath: string, set: boolean) {
-    const disablePath = `${path.resolve(__dirname, `../../commands/${hierarchy}/${filepath}.ts`)}.disabled`
-    const enablePath = path.resolve(__dirname, `../../commands/${hierarchy}/${filepath}.ts`);
+    const disablePath = `${path.resolve(__dirname, `../../commands/${hierarchy}/${filepath}.${ext}`)}.disabled`
+    const enablePath = path.resolve(__dirname, `../../commands/${hierarchy}/${filepath}.${ext}`);
 
     if(fs.existsSync(enablePath) && set == true) {
     } else if (set == true) {
@@ -27,7 +28,7 @@ function getDisabledCommands(commandsDir: string): string[] {
         if (!fs.statSync(folderPath).isDirectory()) continue;
         const files = fs.readdirSync(folderPath);
         for (const file of files) {
-            if (file.endsWith('.disabled.ts') || file.endsWith('.disabled.js')) {
+            if (file.endsWith('.disabled.ts') || file.endsWith(`.${ext}.disabled`)) {
                 result.push(file.replace(/\.(ts|js)\.disabled$/, ''));
             }
         }
@@ -35,12 +36,12 @@ function getDisabledCommands(commandsDir: string): string[] {
     return result.sort();
 }
 
-export async function refreshSlash() {
-    if (getConfig().verbose) {console.log(colorLog.dim, '[I] Checking slash...')};
+export async function reloadSlash() {
     const adminCommand = path.join(process.cwd(), 'src', 'commands');
     const userCommand = path.join(process.cwd(), 'src', 'commands');
     const currentAdminDisabled = getDisabledCommands(adminCommand);
     const currentUserDisabled = getDisabledCommands(userCommand);
+
 
     if (getConfig().enablePing === false) {setSlash("user", 's-ping', false)} else {setSlash("user", 's-ping', true)};
     if (getConfig().enableOsu === false) {setSlash("user", 's-osu', false)} else {setSlash("user", 's-osu', true)};
@@ -48,6 +49,7 @@ export async function refreshSlash() {
 
     if (JSON.stringify(currentAdminDisabled) !== JSON.stringify(lastAdminDisabled) || 
     JSON.stringify(currentUserDisabled) !== JSON.stringify(lastUserDisabled) || typeof firstCheck! === 'undefined') {
+        if (getConfig().verbose) {console.log(colorLog.dim, '[I] Checking slash...')};
         lastAdminDisabled = currentAdminDisabled;
         lastUserDisabled = currentUserDisabled;
         await deploySlash();

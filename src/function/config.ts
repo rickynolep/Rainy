@@ -1,18 +1,11 @@
 import fs from 'fs';
 import path from 'path';
 import { parseDocument, Document } from 'yaml';
-import crypto from 'crypto';
 import type { Config } from '../types/config';
-import { refreshSlash } from './config/slash';
 
 let confPath = path.join(process.cwd(), 'config.yaml');
 let configDoc: Document.Parsed;
 let configObj: Config;
-let lastHash = '';
-
-function getHash(content: string): string {
-    return crypto.createHash('sha256').update(content).digest('hex');
-}
 
 function validateConfig(obj: any) {
     const requiredKeys = [
@@ -23,6 +16,7 @@ function validateConfig(obj: any) {
         'statusText',
         'statusSubText',
         'statusUrl',
+        'AI',
         'slashAI',
         'chatModel',
         'contextLimit',
@@ -57,7 +51,7 @@ function validateConfig(obj: any) {
     return valid;
 }
 
-function loadConfig() {
+export async function reloadConfig() {
     try {
         const raw = fs.readFileSync(confPath, 'utf8');
         configDoc = parseDocument(raw);
@@ -66,40 +60,22 @@ function loadConfig() {
             console.error('[E] config.yaml structure is invalid! Please fix your config file.');
             process.exit(1);
         }
-        if (getConfig().verbose) {console.log(colorLog.dim, `[I] Reloaded config.yaml`)};
+        if (getConfig().verbose) {console.log(colorLog.dim, `[I] Configurations reloaded`)};
     } catch (err) {
         console.error('[E] Failed to load Config file (YAML), is it missing or invalid?');
         process.exit();
     }
 }
 
-async function checkConfig() {
-    const raw = fs.readFileSync(confPath, 'utf8');
-    const hashed = getHash(raw);
-    if (hashed === lastHash) return;
-
-    loadConfig();
-    await refreshSlash();
-
-    lastHash = hashed;
-    
-}
-
-await checkConfig();
-fs.watchFile(confPath, (curr, prev) => {
-    if (curr.mtime !== prev.mtime) {
-        checkConfig();
-    }
-});
-
 export function getConfig(): Config {
     return configObj;
 }
 
+await reloadConfig();
 export function modifyConfig(modifier: (doc: Document.Parsed) => void) {
     const raw = fs.readFileSync(confPath, 'utf8');
     const doc = parseDocument(raw);
     modifier(doc);
     fs.writeFileSync(confPath, String(doc), 'utf8');
-    loadConfig();
+    reloadConfig();
 }

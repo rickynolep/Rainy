@@ -3,7 +3,7 @@
   
   <br> Rainy - Rikomunity AI
   <br> Bot AI dengan Gemini API
-  <br> <a href="https://github.com/rickynolep/RainyTS/commits/main/"><img title="Click untuk melihat Changelog" src="https://img.shields.io/badge/Latest_Changelog-v2.25.7.04-363636?style=flat&logo=github" alt="Versi Terbaru: v2.25.7.04"></a>
+  <br> <a href="https://github.com/rickynolep/RainyTS/commits/main/"><img title="Click untuk melihat Changelog" src="https://img.shields.io/badge/Latest_Changelog-v2.25.7.04-363636?style=flat&logo=github" alt="Versi Terbaru: v2.25.7.05"></a>
   <a href="https://discord.com/invite/pAxmeD3kDj"><img title="Click untuk join server" src="https://img.shields.io/badge/Support%20server-Rikomunity-6a6a6a?style=flat&logo=discord&logoColor=white" alt="Support Server: Rikomunity"></a>
 </h1>
 Rainy adalah bot discord.js yang terintergerasi dengan Gemini API yang membuatnya memiliki kesadaran sendiri dalam merespon segala pesan yang diterima. dibuat oleh Ricky tentunya, hehe (Sekarang dengan TypeScript!)
@@ -17,13 +17,14 @@ git clone https://github.com/rickynolep/RainyTS.git
 # Masuk ke directory
 cd RainyTS
 ```
+Setelah itu ubah file [.env.example](https://github.com/rickynolep/RainyTS/blob/main/.env.example) menjadi `.env` dan isi valuenya sesuai contoh.
 
 ### Start Bot
 Setelah melakukan persiapan, kamu dapat menjalankan botmu saat developtment dari command line dengan cara:
 ```
 bun dev
 ```
-Perlu diingat cara menjalankan botnya setelah dibuild itu `bun src/index.js` atau `node src/index.js` jika menggunakan [NodeJS](https://nodejs.org/en/download)
+Perlu diingat cara menjalankan botnya setelah dibuild itu `bun index.js` atau `node index.js` jika menggunakan [NodeJS](https://nodejs.org/en/download)
 
 ### Building Bot
 Untuk membuat file bot yang sudah siap pakai kamu perlu build projectnya dari command line dengan melakukan:
@@ -38,7 +39,6 @@ Setelah kamu mendapatkan file zip siap pakai, kamu dapat langsung menggunakannya
 ## Server and Contributions
 Pull Request diterima dan bot ini sangat membutuhkan kontribusi, Kamu dapat bergabung dengan server ini untuk dukungan dan membantu pengembangan proyek
 https://discord.com/invite/pAxmeD3kDj
-
 
 ## Dev Folder Structure
 Sebenernya ini tidak perlu dijelaskan cuman karena strukturnya lumayan ribet jadi sekalian aja.. Struktur project ini terbagi menjadi beberapa folder dan file dibawah ini:
@@ -60,9 +60,9 @@ Sebenernya ini tidak perlu dijelaskan cuman karena strukturnya lumayan ribet jad
 │   │   ├── 📄 config.ts - File yang mengelola config (INI BUKAN CONFIG, FILE CONFIG ITU config.yaml)
 │   │   ├── 📄 deploy.ts - File yang menghubungkan slash command dengan Discord
 │   │   ├── 📄 gemini.ts - File wrapper Gemini AI yang mengelola respon AI
-│   │   ├── 📄 osuCheck.ts - File yang mengecek jika ada osu! api key atau tidak
 │   │   └── 📄 writeMemory.ts - File yang menulis memory/history chat
 │   ├── 📁 modules - File-file yang selalu dipanggil saat bot online (Events)
+│   │   ├── 📄 afk.ts - File yang mengurus status AFK
 │   │   ├── 📄 interaction.ts - File yang mengurus interaksi slash command dan button
 │   │   ├── 📄 monitor.ts - File yang memantau chat bila bot dipanggil atau tidak
 │   │   └── 📄 ready.ts - File yang dipanggil setelah bot berhasil login

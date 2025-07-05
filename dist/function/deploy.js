@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { REST, Routes } from 'discord.js';
+import { getConfig } from './config';
 export async function deploySlash() {
     const commands = [];
     const disabledFiles = [];
@@ -8,14 +9,16 @@ export async function deploySlash() {
     const commandsFolders = fs.readdirSync(foldersPath);
     for (const folder of commandsFolders) {
         const commandsPath = path.join(foldersPath, folder);
-        const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.ts') || file.endsWith('.js'));
-        for (const file of commandFiles) {
-            const filePath = path.join(commandsPath, file);
-            const fileContent = fs.readFileSync(filePath, 'utf8');
-            if (fileContent.includes('@disabled')) {
+        const commandFiles = fs.readdirSync(commandsPath).filter(file => (file.endsWith('.ts') || file.endsWith('.js'))
+            && !file.endsWith('.ts.disabled') && !file.endsWith('.js.disabled'));
+        for (const file of fs.readdirSync(commandsPath)) {
+            if (file.endsWith('.ts.disabled') || file.endsWith('.js.disabled')) {
                 disabledFiles.push(file);
                 continue;
             }
+            if (!commandFiles.includes(file))
+                continue;
+            const filePath = path.join(commandsPath, file);
             const rawCommand = await import(filePath);
             const command = rawCommand.default || rawCommand;
             if ('data' in command && 'execute' in command) {
@@ -27,19 +30,26 @@ export async function deploySlash() {
         }
     }
     const rest = new REST({ version: '9' }).setToken(process.env.DISCORD_TOKEN);
-    (async () => {
-        try {
-            console.log(`\x1b[32mStarted refreshing ${commands.length} application (/) commands.\x1b[0m`);
-            const data = await rest.put(Routes.applicationCommands(process.env.CLIENT_ID), { body: commands });
-            if (disabledFiles.length > 0) {
-                console.log(`\x1b[33m[I] Ignoring ${disabledFiles.length} disabled files.`);
+    try {
+        if (getConfig().verbose) {
+            console.log(colorLog.dim, `[I] Refreshing ${commands.length} application (/) commands...`);
+        }
+        ;
+        const data = await rest.put(Routes.applicationCommands(process.env.CLIENT_ID), { body: commands });
+        if (disabledFiles.length > 0) {
+            const disabledNames = disabledFiles.map(f => f.replace(/\.(ts|js)\.disabled$/, '')).join(', ');
+            if (getConfig().verbose) {
+                console.log(colorLog.dim, `[I] ${disabledFiles.length} command is disabled: ${disabledNames}`);
             }
-            console.log(`\x1b[32mSuccessfully reloaded ${data.length} application (/) commands.\x1b[0m`);
+            ;
         }
-        catch (e) {
-            console.error('[E] Slash Command Deploy Failed');
-            console.error(e);
+        if (getConfig().verbose) {
+            console.log(colorLog.dim, `[I] Reloaded ${data.length} application (/) commands`);
         }
-    })();
+        ;
+    }
+    catch (e) {
+        console.error('[E] Slash Command Deploy Failed');
+        console.error(e);
+    }
 }
-deploySlash();

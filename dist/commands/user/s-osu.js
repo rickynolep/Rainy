@@ -4,7 +4,7 @@ import timeConvert from "../../function/tools/timeConvert.js";
 export default {
     data: new SlashCommandBuilder()
         .setName('osu')
-        .setDescription('BETA: Osu Data Search')
+        .setDescription('Osu Intergrations')
         .addSubcommand(subcommand => subcommand
         .setName('bestplay')
         .setDescription('Fetch info about user Top PP Play')

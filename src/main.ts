@@ -2,12 +2,10 @@ import fs from 'fs';
 import path from 'path';
 import dotenv from 'dotenv';
 import { getConfig } from './function/config.js';
-import { osuCheck } from './function/config/osu.js';
-import { fileURLToPath, pathToFileURL } from 'url';
+import { pathToFileURL } from 'url';
 import { Client, GatewayIntentBits, Collection } from 'discord.js';
+import { ext } from './function/bootstrap.js';
 if (getConfig().verbose) {console.log(colorLog.dim, "[I] Check complete, running main file...")};
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.join(process.cwd(), '.env'), quiet: true });
 
 const client = new Client({
@@ -30,7 +28,7 @@ async function main() {
 
         for (const folder of commandFolders) {
             const commandsPath = path.join(foldersPath, folder);
-            const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.ts') || file.endsWith('.js'));
+            const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith(`.${ext}`));
             for (const file of commandFiles) {
                 const filePath = path.join(commandsPath, file);
                 const command = await import(pathToFileURL(filePath).href).then(mod => mod.default || mod);
@@ -43,7 +41,7 @@ async function main() {
         };
         
         const eventsPath = path.join(__dirname, 'modules');
-        const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.ts') || file.endsWith('.js'));
+        const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith(`.${ext}`));
         
         for (const file of eventFiles) {
             const filePath = path.join(eventsPath, file);
@@ -56,13 +54,6 @@ async function main() {
         };
         
         if (process.env.DISCORD_TOKEN) {
-            if (!process.env.OSU_CLIENT || !process.env.OSU_SECRET) {
-                if (getConfig().compatibilityMode === true) {
-                    console.log(colorLog.yellow, "[W] Osu Client/Secret is marked as missing but compatibility mode is enabled!");
-                } else {
-                    await osuCheck();
-                }
-            };
             await client.login(process.env.DISCORD_TOKEN);
         } else {
             console.log('Environment Key(s) is missing (Discord Token) \nCreate new ".env" or import your env with these variable:\n', `  

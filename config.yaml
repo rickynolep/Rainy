@@ -22,7 +22,7 @@ activity: Listening
 statusText: You ( ｡•̀ᴗ- ) ✧
 # Show bot custom status text, activity must also be false if you want to disable this. set false to disable
 
-statusSubText: Running v2.25.7.04
+statusSubText: Running v2.25.7.05
 # Show second bot custom status text, both statusText and activity must be enabled for this to work. set false to disable
 
 statusUrl: https://www.twitch.tv/lofigirl
@@ -31,6 +31,9 @@ statusUrl: https://www.twitch.tv/lofigirl
 
 
 # ================{ AI  Configurations }==================
+
+AI: true
+# Define if AI Features should be enabled or not. if disabled, will affect ALL FEATURES that include AI and stop Chat monitoring
 
 slashAI: true
 # Allow AI to also interact on supported slash command. set false to Decline
@@ -43,21 +46,21 @@ contextLimit: 100
 # How many message AI used as context, More context = Slower Respond! Default: 100 (0 = Unlimited)
 
 alwaysRespond: [ '1230804584235274291' ]
-# Always respond to spesified Channel ID, multiple Channel ID can be added separated by comma. Empty array to disable
+# Always respond to spesified Channel ID, multiple Channel ID can be added separated by comma. false to disable
 
 
 
 # ==================={ Auto Respond }=====================
 
 autoRespond: [ 'Pagi', 'Siang', 'Sore', 'Malem', 'Welcome', 'Sepi' ]
-# Always respond if first 2 words contains these words, not case sensitive. Empty array to disable
+# Always respond if first 2 words contains these words, not case sensitive. false to disable
 
 autoRespondCooldown: 3
 # How many message(s) until next auto respond triggered. Default: 3 (0 = Always trigger auto respond)
 
 alwaysIgnoreSymbol: '-#'
 # Always ignore if contains specified character at start. (Also affect alwaysIgnore) Default: -#
-
+  
 
 
 # =================={ Slash Commands }====================

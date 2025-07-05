@@ -13,6 +13,11 @@ function detectPkgManager() {
         return 'yarn';
     return 'npm';
 }
+const colorlog = {
+    dim: '\x1b[2m%s\x1b[0m',
+    yellow: '\x1b[33m%s\x1b[0m',
+    green: '\x1b[32m%s\x1b[0m'
+};
 export function checkDeps() {
     if (!fs.existsSync(packageJsonPath))
         return;
@@ -34,4 +39,5 @@ export function checkDeps() {
         process.exit(0);
     }
 }
+globalThis.colorLog = colorlog;
 checkDeps();

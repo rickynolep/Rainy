@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import { execSync } from 'child_process';
 console.log('\x1b[2m%s\x1b[0m', '[I] Checking depenencies...')
 const packageJsonPath = path.join(process.cwd(), 'package.json');
@@ -16,6 +17,13 @@ const colorlog = {
     yellow: '\x1b[33m%s\x1b[0m',
     green: '\x1b[32m%s\x1b[0m'
 };
+
+const fileurl = fileURLToPath(import.meta.url);
+globalThis.__filename = fileurl;
+globalThis.__dirname = path.dirname(__filename);
+const isCompiled = __filename.endsWith('.js');
+const ext = isCompiled ? 'js' : 'ts';
+export { ext };
 
 export function checkDeps() {
     if (!fs.existsSync(packageJsonPath)) return;

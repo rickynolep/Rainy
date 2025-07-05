@@ -9,7 +9,6 @@ interface ColorLog {
 }
 
 interface Config {
-    slashAI: boolean,
     verbose: boolean,
     compatibilityMode: boolean,
     status: string,
@@ -17,6 +16,8 @@ interface Config {
     statusText: string | boolean,
     statusSubText: string | boolean,
     statusUrl: string | boolean,
+    AI: boolean,
+    slashAI: boolean,
     autoRespond: array,
     autoRespondCooldown: number,
     alwaysRespond: array,

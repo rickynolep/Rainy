@@ -3,6 +3,7 @@ import path from 'path';
 import { REST, Routes } from 'discord.js';
 import type { APIApplicationCommand } from 'discord-api-types/v10';
 import { getConfig } from './config';
+import { ext } from './bootstrap';
 
 export async function deploySlash() {
     const commands = [];
@@ -12,12 +13,9 @@ export async function deploySlash() {
 
     for (const folder of commandsFolders) {
         const commandsPath = path.join(foldersPath, folder);
-        const commandFiles = fs.readdirSync(commandsPath).filter(file =>
-            (file.endsWith('.ts') || file.endsWith('.js'))
-            && !file.endsWith('.ts.disabled') && !file.endsWith('.js.disabled')
-        );
+        const commandFiles = fs.readdirSync(commandsPath).filter(file => (file.endsWith(`.${ext}`)) && !file.endsWith(`.${ext}.disabled`));
         for (const file of fs.readdirSync(commandsPath)) {
-            if (file.endsWith('.ts.disabled') || file.endsWith('.js.disabled')) {
+            if (file.endsWith(`.${ext}.disabled`)) {
                 disabledFiles.push(file);
                 continue;
             }
@@ -35,7 +33,7 @@ export async function deploySlash() {
 
     const rest = new REST({ version: '9' }).setToken(process.env.DISCORD_TOKEN);
     try {
-        if (getConfig().verbose) {console.log(colorLog.dim, `[I] Refreshing ${commands.length} application (/) commands...`)};
+        if (getConfig().verbose) {console.log(colorLog.dim, `[I] Reloading application (/) commands...`)};
         const data = await rest.put(
             Routes.applicationCommands(process.env.CLIENT_ID),
             { body: commands },
@@ -44,7 +42,7 @@ export async function deploySlash() {
             const disabledNames = disabledFiles.map(f => f.replace(/\.(ts|js)\.disabled$/, '')).join(', ');
             if (getConfig().verbose) {console.log(colorLog.dim, `[I] ${disabledFiles.length} command is disabled: ${disabledNames}`)};
         }
-        if (getConfig().verbose) {console.log(colorLog.dim, `[I] Reloaded ${data.length} application (/) commands`)};
+        if (getConfig().verbose) {console.log(colorLog.dim, `[I] ${data.length} application (/) commands reloaded`)};
     } catch (e) {
         console.error('[E] Slash Command Deploy Failed');
         console.error(e);

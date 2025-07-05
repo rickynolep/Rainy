@@ -7,7 +7,7 @@ export default async function writeMemory(message, role) {
         if (message.mentions.members && message.mentions.members.size > 0) {
             message.mentions.members.forEach((member) => {
                 const mentionPattern = new RegExp(`<@!?${member.id}>`, 'g');
-                messageContent = messageContent.replace(mentionPattern, `${member.displayName} (<@${member.id})`);
+                messageContent = messageContent.replace(mentionPattern, `${member.displayName} (<@${member.id}>)`);
             });
         }
         ;
@@ -41,8 +41,8 @@ export default async function writeMemory(message, role) {
                 ]
             };
         }
-        const cachePath = path.join(process.cwd(), 'cache');
-        const historyFile = path.join(cachePath, `${message.guildId}.json`);
+        const cachePath = path.join(process.cwd(), 'cache', `${message.guildId}`);
+        const historyFile = path.join(cachePath, 'chat.json');
         let existingData = [];
         try {
             await access(cachePath, constants.F_OK);
@@ -69,8 +69,7 @@ export default async function writeMemory(message, role) {
         await writeFile(historyFile, JSON.stringify(existingData, null, 2), 'utf-8');
     }
     catch (e) {
-        console.error('[E] Write Memory Failed');
-        console.error(e);
+        console.error('[E] Write Memory Failed', e);
     }
 }
 ;

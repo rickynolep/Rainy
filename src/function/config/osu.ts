@@ -1,60 +1,64 @@
 import fs from 'fs';
 import path from 'path';
 import readline from 'readline';
-import { fileURLToPath } from 'url';
-import { getConfig, modifyConfig } from '../config';
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const osuCommandPath = path.resolve(__dirname, '../commands/user/osu.ts');
-const osuDisabledPath = osuCommandPath + '.disabled';
-let rl: any = '';
+import { modifyConfig } from '../config';
+import { ext } from '../bootstrap';
 
-if (getConfig().compatibilityMode === false) {
-    rl = readline.createInterface({
+const osuCommandPath = path.resolve(__dirname, `../commands/user/s-osu.${ext}`);
+const osuDisabledPath = osuCommandPath + '.disabled';
+let running = false;
+let invalidAnswer = 0;
+
+function prompt(question: string): Promise<string> {
+    const rl = readline.createInterface({
         input: process.stdin,
         output: process.stdout
     });
-}
-
-async function missingErr() {
-    const answer = (await prompt('Osu Client or Secret key is missing, do you plan to disable osu slash command? (Yes/N): ')).trim().toLowerCase();
-    
-    if (['yes', 'y'].includes(answer.trim().toLowerCase())) {
-        modifyConfig((doc) => { doc.set('osuEnable', false)});
-    } else if (['no', 'n'].includes(answer.trim().toLowerCase())) {
-        console.log(colorLog.yellow, 'Please add your Osu Einviroment Key(s) before continue!\n\n',
-            'Example key:\n',
-            'OSU_CLIENT = "12345"\n',
-            'OSU_SECRET = "AbCd3fGh1YoUr0su5ecretT0k3NHeRE"\n'         
-        ); process.exit(1);
-    } else {
-        console.error('Invalid Answer, only answer \'Yes\', \'no\' or \'y\', \'N\'!')
-        await missingErr()
-    }
-};
-
-function prompt(question: string): Promise<string> {
     return new Promise((resolve) => {
-        rl.question(question, (answer: any) => resolve(answer));
+        rl.question(question, (answer) => {
+            rl.close();
+            resolve(answer);
+        });
     });
 }
 
-export async function osuCheck(){
-    if (fs.existsSync(osuDisabledPath)) {} 
-    else {
-        const answer = (await prompt('Osu Client or Secret key is missing, do you plan to disable osu slash command? (Yes/N): ')).trim().toLowerCase();
-        
-        if (['yes', 'y'].includes(answer.trim().toLowerCase())) {
-            modifyConfig((doc) => { doc.set('osuEnable', false)});
-        } else if (['no', 'n'].includes(answer.trim().toLowerCase())) {
-            console.log(colorLog.yellow, 'Please add your Osu Einviroment Key(s) before continue!\n\n',
+export async function osuCheck() {
+    if (running) return;
+    running = true;
+
+    try {
+        if (fs.existsSync(osuDisabledPath)) {
+            running = false;
+            return;
+        }
+
+        let answer = '';
+        if (invalidAnswer === 0) {
+            answer = (await prompt('osu! Client or Secret key is missing, do you plan to disable osu slash command? (Yes/N): ')).trim().toLowerCase();
+        } else {
+            answer = (await prompt('Answer: ')).trim().toLowerCase();
+        }
+
+        if (['yes', 'y'].includes(answer)) {
+            modifyConfig((doc) => {
+                doc.set('enableOsu', false);
+            });
+        } else if (['no', 'n'].includes(answer)) {
+            console.log(colorLog.yellow,
+                'Please add your osu! Environment Key(s) before continuing!\n\n',
                 'Example key:\n',
                 'OSU_CLIENT = "12345"\n',
-                'OSU_SECRET = "AbCd3fGh1YoUr0su5ecretT0k3NHeRE"\n'         
-            ); process.exit(1);
+                'OSU_SECRET = "AbCd3fGh1YoUr0su5ecretT0k3NHeRE"\n'
+            );
         } else {
-            console.error('Invalid Answer, only answer \'Yes\', \'no\' or \'y\', \'N\'!')
-            await missingErr()
+            console.error('Invalid Answer, only answer "Yes", "No", "Y", or "N"!');
+            invalidAnswer++;
+            running = false;
+            await osuCheck();
         }
+    } catch (err) {
+        console.error('[E] osuCheck error:', err);
+    } finally {
+        running = false;
     }
-};
+}
