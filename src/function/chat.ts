@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
 import gemini from './gemini.js';
-import writeMemory from './writeMemory.js';
 import { getConfig } from './config.js';
+import writeMemory from './writeMemory.js';
 
 export async function handleChat(message: any) {
     try {
@@ -16,7 +16,6 @@ export async function handleChat(message: any) {
         const result = await gemini(history, 'chat');
         const reply = await message.reply({ content: result, allowedMentions: { repliedUser: false } });
         await writeMemory(reply, 'model');
-
         /*
         if (currentChunk.trim() !== '') chunks.push(currentChunk);
         if (chunks.length > 0) {

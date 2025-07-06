@@ -1,11 +1,8 @@
 declare global {
-    var colorLog: ColorLog
-}
-
-interface ColorLog {
-    dim: string
-    yellow:  string
-    green: string
+    var red: (text: string) => string;
+    var dim: (text: string) => string;
+    var green: (text: string) => string;
+    var yellow: (text: string) => string;
 }
 
 interface Config {
@@ -18,15 +15,15 @@ interface Config {
     statusUrl: string | boolean,
     AI: boolean,
     slashAI: boolean,
-    autoRespond: array,
-    autoRespondCooldown: number,
-    alwaysRespond: array,
-    alwaysIgnoreSymbol: string,
     chatModel: string,
     contextLimit: number,
+    alwaysRespond: string[] | boolean,
+    autoRespond: string[] | boolean,
+    autoRespondCooldown: number,
+    alwaysIgnoreSymbol: string,
     enableOsu: boolean,
     enableAfk: boolean,
-    enablePing: boolean
+    enablePing: boolean,
 }
 
 interface GeminiConfig {

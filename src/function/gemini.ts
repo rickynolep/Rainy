@@ -1,7 +1,8 @@
 import fs from 'fs';
-import { GoogleGenAI } from '@google/genai'
-import { GeminiConfig } from '../types/config.js';
 import { getConfig } from './config.js';
+import { GoogleGenAI } from '@google/genai'
+import { GeminiConfig } from '../types/global.js';
+
 let chatModel = getConfig().chatModel
 
 export default async function gemini(data: Object, type: string, tries = 1): Promise<string> {

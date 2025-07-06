@@ -1,6 +1,6 @@
 import * as osu from "osu-api-v2-js";
-import { SlashCommandBuilder, EmbedBuilder,ChatInputCommandInteraction } from 'discord.js';
 import timeConvert from "../../function/tools/timeConvert.js";
+import { SlashCommandBuilder, EmbedBuilder,ChatInputCommandInteraction } from 'discord.js';
 
 export default {
     data: new SlashCommandBuilder()

@@ -2,6 +2,7 @@ import { Events, Message } from 'discord.js';
 import { handleChat } from '../function/chat.js';
 import { getConfig } from '../function/config.js';
 import writeMemory from '../function/writeMemory.js';
+
 const autoRespondCooldown: Record<string, number> = {};
 let autoRespondList: Array<string>;
 let autoRespondCatcher: string[];
@@ -17,9 +18,12 @@ export default {
             const msgLower = message.content.toLowerCase();
             const channelId = message.channel.id;
             await writeMemory(message, 'user');
-            if(getConfig().autoRespond !== false) {
+        
+            const autoResConf = getConfig().autoRespond;
+            const autoRespond: string[] = Array.isArray(autoResConf) ? autoResConf : [];
+            if (getConfig().autoRespond !== false) {
                 autoRespondCatcher = msgLower.trim().split(/\s+/).slice(0, 2);
-                autoRespondList = getConfig().autoRespond.map((w: string) => w.toLowerCase());
+                autoRespondList = autoRespond.map((w: string) => w.toLowerCase());
             }
             
             function decrementCooldown() {
@@ -41,7 +45,7 @@ export default {
                     autoRespondCooldown[channelId] = getConfig().autoRespondCooldown;
                 }
             } else if (
-                (getConfig().alwaysRespond !== false && getConfig().alwaysRespond.includes(channelId) && !message.content.trim().startsWith(getConfig().alwaysIgnoreSymbol)) ||
+                (Array.isArray(getConfig().alwaysRespond) && autoRespond.includes(channelId) && !message.content.trim().startsWith(getConfig().alwaysIgnoreSymbol)) ||
                 (message.mentions.has(message.author) && !message.mentions.everyone) ||
                 message.mentions.users.has(client.user!.id)
             ) {

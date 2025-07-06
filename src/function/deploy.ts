@@ -1,9 +1,9 @@
 import fs from 'fs';
 import path from 'path';
+import { ext } from './bootstrap.js';
+import { getConfig } from './config.js';
 import { REST, Routes } from 'discord.js';
 import type { APIApplicationCommand } from 'discord-api-types/v10';
-import { getConfig } from './config';
-import { ext } from './bootstrap';
 
 export async function deploySlash() {
     const commands = [];
@@ -26,23 +26,23 @@ export async function deploySlash() {
             if ('data' in command && 'execute' in command) {
                 commands.push(command.data.toJSON())
             } else {
-                console.warn(colorLog.yellow, `[W] ${filePath} is missing data and(or) execute property`);
+                console.warn(yellow(`[W] ${filePath} is missing data and(or) execute property`));
             }
         }
     }
 
     const rest = new REST({ version: '9' }).setToken(process.env.DISCORD_TOKEN);
     try {
-        if (getConfig().verbose) {console.log(colorLog.dim, `[I] Reloading application (/) commands...`)};
+        if (getConfig().verbose) {console.log(dim(`[I] Reloading application (/) commands...`))};
         const data = await rest.put(
             Routes.applicationCommands(process.env.CLIENT_ID),
             { body: commands },
         ) as APIApplicationCommand[];
         if (disabledFiles.length > 0) {
             const disabledNames = disabledFiles.map(f => f.replace(/\.(ts|js)\.disabled$/, '')).join(', ');
-            if (getConfig().verbose) {console.log(colorLog.dim, `[I] ${disabledFiles.length} command is disabled: ${disabledNames}`)};
+            if (getConfig().verbose) {console.log(dim(`[I] ${disabledFiles.length} command is disabled: ${disabledNames}`))};
         }
-        if (getConfig().verbose) {console.log(colorLog.dim, `[I] ${data.length} application (/) commands reloaded`)};
+        if (getConfig().verbose) {console.log(dim(`[I] ${data.length} application (/) commands reloaded`))};
     } catch (e) {
         console.error('[E] Slash Command Deploy Failed');
         console.error(e);

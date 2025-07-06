@@ -1,11 +1,9 @@
 import fs from 'fs';
 import path from 'path';
 import dotenv from 'dotenv';
-import { getConfig } from './function/config.js';
 import { pathToFileURL } from 'url';
-import { Client, GatewayIntentBits, Collection } from 'discord.js';
 import { ext } from './function/bootstrap.js';
-if (getConfig().verbose) {console.log(colorLog.dim, "[I] Check complete, running main file...")};
+import { Client, GatewayIntentBits, Collection } from 'discord.js';
 dotenv.config({ path: path.join(process.cwd(), '.env'), quiet: true });
 
 const client = new Client({
@@ -19,7 +17,7 @@ const client = new Client({
 }); 
 
 export { client };
-async function main() {
+export async function main() {
     try {
         client.commands = new Collection();
         const foldersPath = path.join(__dirname, 'commands');
@@ -35,7 +33,7 @@ async function main() {
                 if ('data' in command && 'execute' in command) {
                     client.commands.set(command.data.name, command);
                 } else {
-                    console.warn(colorLog.yellow, `[W] ${filePath} is missing data and/or execute`);
+                    console.warn(yellow(`[W] ${filePath} is missing data and/or execute`));
                 };
             };
         };
@@ -53,20 +51,6 @@ async function main() {
             }
         };
         
-        if (process.env.DISCORD_TOKEN) {
-            await client.login(process.env.DISCORD_TOKEN);
-        } else {
-            console.log('Environment Key(s) is missing (Discord Token) \nCreate new ".env" or import your env with these variable:\n', `  
-            DISCORD_TOKEN = "MTxxxxxxxxxxxxxxxxxx"  - [Your Discord Token]
-            GEMINI_KEY = "AIxxxxxxxx"               - [Your Gemini Key]
-            CLIENT_ID = "13xxxxxxxx"                - [Your Discord Client ID]
-            OSU_CLIENT = "xxxxx"                    - [Your Osu Client ID] (optional)
-            OSU_SECRET = "1xxxxxxxxxx"              - [Your Osu Secret] (optional)\n`
-            ); return;
-        };
-    } catch (e) {
-        console.error(`error occured: ${e}`)
-    };
+        await client.login(process.env.DISCORD_TOKEN);
+    } catch (e) {console.error(`error occured: ${e}`)};
 };
-
-main();

@@ -22,7 +22,7 @@ activity: Listening
 statusText: You ( ｡•̀ᴗ- ) ✧
 # Show bot custom status text, activity must also be false if you want to disable this. set false to disable
 
-statusSubText: Running v2.25.7.05
+statusSubText: Running v2.25.7.06-DEV
 # Show second bot custom status text, both statusText and activity must be enabled for this to work. set false to disable
 
 statusUrl: https://www.twitch.tv/lofigirl

@@ -1,8 +1,10 @@
 import fs from 'fs';
 import path from 'path';
-import { deploySlash } from "../deploy.js";
-import { getConfig } from '../config.js';
+import { reloadOsu } from './osu.js';
 import { ext } from '../bootstrap.js';
+import { getConfig } from '../config.js';
+import { deploySlash } from "../deploy.js";
+
 let lastAdminDisabled: string[] = [];
 let lastUserDisabled: string[] = [];
 let firstCheck: boolean;
@@ -37,11 +39,11 @@ function getDisabledCommands(commandsDir: string): string[] {
 }
 
 export async function reloadSlash() {
-    const adminCommand = path.join(process.cwd(), 'src', 'commands');
-    const userCommand = path.join(process.cwd(), 'src', 'commands');
+    const adminCommand = path.resolve(__dirname, '../', '../', 'commands');
+    const userCommand = path.resolve(__dirname, '../', '../', 'commands');
     const currentAdminDisabled = getDisabledCommands(adminCommand);
     const currentUserDisabled = getDisabledCommands(userCommand);
-
+    await reloadOsu();
 
     if (getConfig().enablePing === false) {setSlash("user", 's-ping', false)} else {setSlash("user", 's-ping', true)};
     if (getConfig().enableOsu === false) {setSlash("user", 's-osu', false)} else {setSlash("user", 's-osu', true)};
@@ -49,7 +51,7 @@ export async function reloadSlash() {
 
     if (JSON.stringify(currentAdminDisabled) !== JSON.stringify(lastAdminDisabled) || 
     JSON.stringify(currentUserDisabled) !== JSON.stringify(lastUserDisabled) || typeof firstCheck! === 'undefined') {
-        if (getConfig().verbose) {console.log(colorLog.dim, '[I] Checking slash...')};
+        if (getConfig().verbose) {console.log(dim('[I] Checking slash...'))};
         lastAdminDisabled = currentAdminDisabled;
         lastUserDisabled = currentUserDisabled;
         await deploySlash();

@@ -1,6 +1,7 @@
 import { client } from "../../main.js";
 import { getConfig, modifyConfig } from "../config.js";
 import { ActivityType, PresenceUpdateStatus, PresenceStatusData } from "discord.js";
+
 let lastActivity: string = '';
 let lastStatus: PresenceStatusData | null = null;
 
@@ -37,13 +38,13 @@ export async function reloadStatus() {
             ? `${activity} to ${statusText}`
             : `${activity} ${statusText}`;
     } else {
-        console.warn(colorLog.yellow, '[W] Invalid activity! Allowed: Listening, Playing, Watching, Streaming, Competing, or false. Falling back to false.');
+        console.warn(yellow('[W] Invalid activity! Allowed: Listening, Playing, Watching, Streaming, Competing, or false. Falling back to false.'));
         modifyConfig((doc) => { doc.set('activity', false); });
         activityType = ActivityType.Custom;
     }
 
     if (activity !== false && !statusText) {
-        console.warn(colorLog.yellow, '[W] Cannot disable statusText if activity is enabled! Disabling activity.');
+        console.warn(yellow('[W] Cannot disable statusText if activity is enabled! Disabling activity.'));
         modifyConfig((doc) => { doc.set('activity', false); });
         activityType = ActivityType.Custom;
     }
@@ -67,7 +68,7 @@ export async function reloadStatus() {
 
     const presenceStatus: PresenceStatusData = statusMap[status] ?? PresenceUpdateStatus.Online;
     if (!statusMap[status]) {
-        console.warn(colorLog.yellow, '[W] Invalid status format! Falling back to Online.');
+        console.warn(yellow('[W] Invalid status format! Falling back to Online.'));
         modifyConfig((doc) => { doc.set('status', 'Online'); });
     }
 
@@ -81,6 +82,6 @@ export async function reloadStatus() {
             client.user?.setStatus(presenceStatus);
             lastStatus = presenceStatus;
         }
-        if (verbose) {console.log(colorLog.dim,  `[I] Bot status reloaded (${status || 'Online'} - ${displayText || 'No status'}, ${subText || 'No substatus'})`)}
+        if (verbose) {console.log(dim(`[I] Bot status reloaded (${status || 'Online'} - ${displayText || 'No status'}, ${subText || 'No substatus'})`) )}
     }
 }

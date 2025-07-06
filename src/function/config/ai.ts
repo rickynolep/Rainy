@@ -1,7 +1,7 @@
-import { getConfig } from '../config';
-import path from 'path';
 import fs from 'fs';
-import { ext } from '../bootstrap';
+import path from 'path';
+import { ext } from '../bootstrap.js';
+import { getConfig } from '../config.js';
 
 function setAI(set: boolean) {
     const disablePath = `${path.resolve(__dirname, `../../modules/monitor.${ext}`)}.disabled`
@@ -14,10 +14,7 @@ function setAI(set: boolean) {
     }
 }
 
-export async function AICheck() {
-    if (getConfig().AI === false) {
-        setAI(false)
-    } else {
-        setAI(true)
-    };
+export async function reloadAI() {
+    if (getConfig().AI === false) {setAI(false)} 
+    else {setAI(true)};
 }
