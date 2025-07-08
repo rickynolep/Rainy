@@ -1,0 +1,108 @@
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, MessageComponentInteraction, MessageFlags, SlashCommandBuilder } from 'discord.js';
+import { access, constants, mkdir, readFile, writeFile } from 'fs/promises';
+import path from 'path';
+import { getConfig } from '../../function/config.js';
+import gemini from '../../function/gemini.js';
+
+export default { 
+	data: new SlashCommandBuilder()
+		.setName('afk')
+		.setDescription('Set your afk that will remind anyone that try to notify you')
+        .addStringOption(option => 
+            option.setName('reason')
+                .setDescription('Reason for your afk')
+                .setRequired(false))
+        .addBooleanOption(boolean => 
+            boolean.setName('reply')
+                .setDescription('Reply anyone that trying to mention you? Default: True (Yes)')
+                .setRequired(false)),
+
+	async execute(interaction: ChatInputCommandInteraction) {
+        const reason = interaction.options.getString('reason');
+        let reply = interaction.options.getBoolean('reply');
+        if (reply === null) { reply = true }
+
+        let afkData: Record<string, {
+            afkReason: string | null,
+            afkDate: Date,
+            reply: boolean
+        }> = {};
+        const cachePath = path.join(process.cwd(), 'cache', 'servers', `${interaction.guildId}`);
+        const afkFile = path.join(cachePath, 'afk.json');
+
+        try {
+            await access(cachePath, constants.F_OK);
+        } catch { 
+            await mkdir(cachePath, { recursive: true });
+            console.log('\x1b[2m%s\x1b[0m', '[I] Creating cache path...');
+        };
+
+        try {
+            try { 
+                afkData = JSON.parse(await readFile(afkFile, 'utf-8'));
+            } catch {
+                console.warn(dim('[I] Creating cache file...'));
+            }
+        } catch (e) {
+            if ((e as NodeJS.ErrnoException).code !== 'ENOENT') throw e;
+        };
+
+        if (afkData[interaction.user.id]) {
+            const afkClear = new ButtonBuilder()
+                .setCustomId('afkClear')
+                .setLabel('Hapus')
+                .setStyle(ButtonStyle.Primary);
+            const afkUpdate = new ButtonBuilder()
+                .setCustomId('afkUpdate')
+                .setLabel('Update aja deh!')
+                .setStyle(ButtonStyle.Success);
+            const afkCancel = new ButtonBuilder()
+                .setCustomId('afkCancel')
+                .setLabel('Batal')
+                .setStyle(ButtonStyle.Secondary);
+            const row = new ActionRowBuilder()
+                .addComponents(afkClear)
+                .addComponents(afkUpdate)
+                .addComponents(afkCancel)
+
+                const question = await interaction.reply({ content: 'Kamu lagi afk.. Mau ku perbaharui waktu afknya atau hapus?', components: [row.toJSON()] ,flags: MessageFlags.Ephemeral, withResponse: true});
+                const collectorFilter = (i: MessageComponentInteraction) => i.user.id === interaction.user.id;
+
+                try {
+                    const confirm = await question.resource!.message!.awaitMessageComponent({ filter: collectorFilter, time: 10_000 });
+                    if (confirm.customId === 'afkUpdate') {
+                        await confirm.update({ content: 'AFK diperbarui!', components: [] });
+                        afkData[interaction.user.id] = {
+                            afkReason: reason,
+                            afkDate: interaction.createdAt,
+                            reply: reply
+                        };
+                    } else if (confirm.customId === 'afkClear') {
+                        await confirm.update({ content: `Selamat datang kembali, ${interaction.user.displayName}!`, components: [] });
+                        delete afkData[interaction.user.id];
+                    } else if (confirm.customId === 'afkCancel') {
+                        return
+                    };
+                    await writeFile(afkFile, JSON.stringify(afkData, null, 2), 'utf-8');
+                } catch {
+                    await interaction.editReply({ content: 'Dasar lambat!', components: [] });
+                }
+        } else {
+            let response: string;
+            if (getConfig().slashAI === true) {
+                let history = JSON.parse(await readFile(`./cache/servers/${interaction.guildId}/chats.json`, 'utf-8'));
+                if (getConfig().contextLimit > 0) {history = history.slice(-getConfig().contextLimit)}
+                response = await gemini(history, 'afkSet', undefined, reason || '(unspesified');
+            } else {
+                response = `Bai bai ${interaction.user.displayName}!`
+            }
+            interaction.reply(response)
+            afkData[interaction.user.id] = {
+                    afkReason: reason,
+                    afkDate: interaction.createdAt,
+                    reply: reply
+            };
+            await writeFile(afkFile, JSON.stringify(afkData, null, 2), 'utf-8');
+        }
+	}
+};

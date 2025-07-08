@@ -1,6 +1,6 @@
-import * as osu from "osu-api-v2-js";
-import timeConvert from "../../function/tools/timeConvert.js";
-import { SlashCommandBuilder, EmbedBuilder,ChatInputCommandInteraction } from 'discord.js';
+import * as osu from 'osu-api-v2-js';
+import convertTime from '../../function/tools/convertTime.js';
+import { SlashCommandBuilder, EmbedBuilder, ChatInputCommandInteraction } from 'discord.js';
 
 export default {
     data: new SlashCommandBuilder()
@@ -37,7 +37,7 @@ export default {
         const stats = 
             `[${score.beatmapset.artist} - ${score.beatmapset.title}](https://osu.ppy.sh/beatmapsets/${score.beatmap.beatmapset_id}#osu/${score.beatmap.id})\n` + 
             `${score.beatmap.version} + ${score.mods.map((m) => m.acronym).toString()} (${starRating})\n` + 
-            `${timeConvert(score.ended_at)}\n` +
+            `${convertTime(score.ended_at, 'date')}\n` +
             `# ${totalScore} (${accuracy})\n` + 
             `**${rank || score.rank}** +${score.pp?.toFixed(0)}pp\n\n` +
             `${performance}`

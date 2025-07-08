@@ -4,6 +4,15 @@ import { ActivityType, PresenceUpdateStatus, PresenceStatusData } from "discord.
 
 let lastActivity: string = '';
 let lastStatus: PresenceStatusData | null = null;
+const statusMap: Record<string, PresenceStatusData> = {
+    Online: PresenceUpdateStatus.Online,
+    Idle: PresenceUpdateStatus.Idle,
+    DoNotDisturb: PresenceUpdateStatus.DoNotDisturb,
+    Invisible: PresenceUpdateStatus.Invisible,
+};
+let newActivityKey: any, presence :any, presenceStatus: PresenceStatusData = statusMap[''] ?? PresenceUpdateStatus.Online;
+let firstActivity = true;
+let firstPresence = true;
 
 export async function reloadStatus() {
     const config = getConfig();
@@ -49,30 +58,22 @@ export async function reloadStatus() {
         activityType = ActivityType.Custom;
     }
 
-    const presence: any = {
+    presence  = {
         type: activityType,
         name: statusText || '',
     };
 
     if (activityType !== ActivityType.Custom) {
-        if (statusSubText !== false) presence.state = subText;
-        if (statusUrl !== false && activityType === ActivityType.Streaming) presence.url = statusUrl;
+        if (statusSubText !== false) presence!.state = subText;
+        if (statusUrl !== false && activityType === ActivityType.Streaming) presence!.url = statusUrl;
     }
 
-    const statusMap: Record<string, PresenceStatusData> = {
-        Online: PresenceUpdateStatus.Online,
-        Idle: PresenceUpdateStatus.Idle,
-        DoNotDisturb: PresenceUpdateStatus.DoNotDisturb,
-        Invisible: PresenceUpdateStatus.Invisible,
-    };
-
-    const presenceStatus: PresenceStatusData = statusMap[status] ?? PresenceUpdateStatus.Online;
     if (!statusMap[status]) {
         console.warn(yellow('[W] Invalid status format! Falling back to Online.'));
         modifyConfig((doc) => { doc.set('status', 'Online'); });
     }
 
-    const newActivityKey = JSON.stringify(presence);
+    newActivityKey = JSON.stringify(presence);
     if (newActivityKey !== lastActivity || lastStatus !== presenceStatus) {
         if (newActivityKey !== lastActivity) {
             client.user?.setActivity(presence);
@@ -82,6 +83,19 @@ export async function reloadStatus() {
             client.user?.setStatus(presenceStatus);
             lastStatus = presenceStatus;
         }
-        if (verbose) {console.log(dim(`[I] Bot status reloaded (${status || 'Online'} - ${displayText || 'No status'}, ${subText || 'No substatus'})`) )}
+        if (verbose) {console.log(dim(`[I] Bot status reloaded (${status || 'Online'} - ${displayText || 'No status'}, ${subText || 'No substatus'})`) )};
+    }
+}
+
+export async function newStatus() {
+    if (newActivityKey !== lastActivity || firstActivity) {
+        client.user?.setActivity(presence);
+        lastActivity = newActivityKey;
+        firstActivity = false;
+        }   
+    if (lastStatus !== presenceStatus || firstPresence) {
+        client.user?.setStatus(presenceStatus);
+        lastStatus = presenceStatus;
+        firstPresence = false;
     }
 }

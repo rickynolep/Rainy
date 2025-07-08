@@ -6,8 +6,7 @@ import writeMemory from './writeMemory.js';
 export async function handleChat(message: any) {
     try {
         message.channel.sendTyping();
-        const rawHistory = await fs.readFile(`./cache/${message.guildId}/chat.json`, 'utf8');
-        let history = JSON.parse(rawHistory);
+        let history = JSON.parse(await fs.readFile(`./cache/servers/${message.guildId}/chats.json`, 'utf8'));
         if (Array.isArray(history)) {
             if (getConfig().contextLimit > 0) {
                 history = history.slice(-getConfig().contextLimit);

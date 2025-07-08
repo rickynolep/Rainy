@@ -38,7 +38,7 @@ export async function main() {
             };
         };
         
-        const eventsPath = path.join(__dirname, 'modules');
+        const eventsPath = path.join(__dirname, 'handler');
         const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith(`.${ext}`));
         
         for (const file of eventFiles) {
