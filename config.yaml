@@ -22,7 +22,7 @@ activity: Listening
 statusText: You ( ｡•̀ᴗ- ) ✧
 # Show bot custom status text, activity must also be false if you want to disable this. set false to disable
 
-statusSubText: Running v2.25.7.06-DEV
+statusSubText: Running v2.25.7.08
 # Show second bot custom status text, both statusText and activity must be enabled for this to work. set false to disable
 
 statusUrl: https://www.twitch.tv/lofigirl
@@ -30,14 +30,14 @@ statusUrl: https://www.twitch.tv/lofigirl
 
 
 
-# ================{ AI  Configurations }==================
+# ================{ AI Configurations }===================
 
 AI: true
 # Define if AI Features should be enabled or not. if disabled, will affect ALL FEATURES that include AI and stop Chat monitoring
 
-slashAI: true
+slashAI: false
 # Allow AI to also interact on supported slash command. set false to Decline
-# Supported slash command: (To Do!)
+# Supported slash command: (To Do!) PLEASE DO NOT ENABLE THIS FOR NOW!
 
 chatModel: 'gemini-2.5-flash'
 # Change the Default Model for casual chatting (Only Gemini is supported!). Default: gemini-2.5-flash
@@ -51,8 +51,10 @@ alwaysRespond: [ '1230804584235274291' ]
 
 
 # ==================={ Auto Respond }=====================
+# Currently Auto Respond require AI to work, Im planning to make this works without AI but for now you need AI for this
 
-autoRespond: [ 'Pagi', 'Siang', 'Sore', 'Malem', 'Welcome', 'Sepi' ]
+
+autoRespond: [ 'Pagi', 'Siang', 'Sore', 'Malem', 'Malam', 'Welcome', 'Sepi' ]
 # Always respond if first 2 words contains these words, not case sensitive. false to disable
 
 autoRespondCooldown: 3
@@ -60,7 +62,17 @@ autoRespondCooldown: 3
 
 alwaysIgnoreSymbol: '-#'
 # Always ignore if contains specified character at start. (Also affect alwaysIgnore) Default: -#
-  
+
+
+
+# ================={ Confess Command }====================
+
+# enableConfess: true // TO DO!
+# Define if /confess is enabled or not. True/false
+
+# confessAllowImage: true // TO DO!
+# Allow uploading image to confession, This require enableCatbox to work properly!
+
 
 
 # =================={ Slash Commands }====================
@@ -68,8 +80,26 @@ alwaysIgnoreSymbol: '-#'
 enablePing: true
 # Define if /ping is enabled or not. True/False
 
+enableAfk: false
+# Define if /afk is enabled or not. True/False
+# THIS IS STILL UNDER DEVELOPTMENT AND WILL DO BASICALLY NOTHING YET!!
+
+# enableStickyMsg: true // TO DO
+# Define if /stickyMsg is enabled or not. True/False
+# Only user with 'Manage Message' are allowed to use this 
+
+
+
+# =================={ Intergrations }=====================
+
 enableOsu: true
 # Define if osu! intergrations is enabled or not. True/False
+# osu! is a rythmn game, this intergrations allow user to fetch info from osu!
 
-enableAfk: true
-# Define if /afk is enabled or not. True/False
+enableNeko: true
+# Define if Nekosia intergrations is enabled or not. True/False
+# Nekosia is a image board filled with catgirls, this allow user to get random image of catgirls
+
+# enableCatbox: true // TO DO!
+# Define if Catbox intergrations is enabled or not. True/False
+# Catbox is an image hosting service, this allow user to get permanent link for their images

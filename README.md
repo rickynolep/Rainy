@@ -42,6 +42,7 @@ https://discord.com/invite/pAxmeD3kDj
 
 ## Dev Folder Structure
 Sebenernya ini tidak perlu dijelaskan cuman karena strukturnya lumayan ribet jadi sekalian aja.. Struktur project ini terbagi menjadi beberapa folder dan file dibawah ini:
+### OUTDATED
 ```
 📁 RainyTS
 ├── 📁 cache - Tempat dimana hasil data yang diproses disimpan (contoh: History chat)

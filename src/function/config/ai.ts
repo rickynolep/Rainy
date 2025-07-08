@@ -4,8 +4,8 @@ import { ext } from '../bootstrap.js';
 import { getConfig } from '../config.js';
 
 function setAI(set: boolean) {
-    const disablePath = `${path.resolve(__dirname, `../../modules/monitor.${ext}`)}.disabled`
-    const enablePath = path.resolve(__dirname, `../../modules/monitor.${ext}`);
+    const disablePath = `${path.resolve(__dirname, `../../function/chat.${ext}`)}.disabled`
+    const enablePath = path.resolve(__dirname, `../../function/chat.${ext}`);
 
     if (fs.existsSync(disablePath) && set == true) {
         fs.renameSync(disablePath, enablePath);

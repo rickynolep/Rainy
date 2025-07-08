@@ -21,9 +21,10 @@ interface Config {
     autoRespond: string[] | boolean,
     autoRespondCooldown: number,
     alwaysIgnoreSymbol: string,
-    enableOsu: boolean,
-    enableAfk: boolean,
     enablePing: boolean,
+    enableAfk: boolean,
+    enableOsu: boolean,
+    enableNeko: boolean
 }
 
 interface GeminiConfig {

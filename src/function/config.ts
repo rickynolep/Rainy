@@ -9,12 +9,13 @@ import { reloadStatus } from './config/status.js';
 import type { Config } from '../types/global.js';
 
 let confPath = path.join(process.cwd(), 'config.yaml');
-const raw = fs.readFileSync(confPath, 'utf8');
-const configDoc = parseDocument(raw);
-let config = configDoc.toJS() as Config;
+let lastconfig: any; let config: Config
 
-let lastconfig: any;
 export async function reloadConfig() {
+    const raw = fs.readFileSync(confPath, 'utf8');
+    const configDoc = parseDocument(raw);
+    config = configDoc.toJS() as Config;
+
     const configSchema: Record<string, {
             types: string[], 
             category: 'system' | 'status' | 'ai' | 'autorespond' | 'slash'
@@ -64,11 +65,11 @@ export async function reloadConfig() {
             category: 'ai' 
         },
         alwaysRespond: { 
-            types: ['numberset'],
+            types: ['numberset', 'false'],
             category: 'ai' 
         },
         autoRespond: { 
-            types: ['object'],
+            types: ['object', 'numberset', 'false'],
             category: 'autorespond' 
         },
         autoRespondCooldown: { 
@@ -88,6 +89,10 @@ export async function reloadConfig() {
             category: 'slash' 
         },
         enableAfk: { 
+            types: ['boolean'],
+            category: 'slash' 
+        }, 
+        enableNeko: { 
             types: ['boolean'],
             category: 'slash' 
         },
@@ -168,10 +173,12 @@ export async function reloadConfig() {
                     console.log(`        - ${red(`${key}`)} cannot be disabled and only allow text, but you put ${value} (${got})!`);
                 } else if (deepEqual(expected, ["number"])) {
                     console.log(`        - ${red(`${key}`)} can only be a number, but you put ${value} (${got})!`);
-                } else if (deepEqual(expected, ["object"])) {
-                    console.log(`        - ${red(`${key}`)} can only be a set of text and number, but you put ${value} (${got})!`);
-                } else if (deepEqual(expected, ["numberset"])) {
-                    console.log(`        - ${red(`${key}`)} can only be a set of number, but you put ${value} (${got})!`);
+                } else if (deepEqual(expected, ['object', 'false'])) {
+                    console.log(`        - ${red(`${key}`)} can only be a set of text or false, but you put ${value} (${got})!`);
+                } else if (deepEqual(expected, ['object', 'numberset', 'false'])) {
+                    console.log(`        - ${red(`${key}`)} can only be a set of text and number or false, but you put ${value} (${got})!`);
+                }else if (deepEqual(expected, ['numberset', 'false'])) {
+                    console.log(`        - ${red(`${key}`)} can only be a set of number or false, but you put ${value} (${got})!`);
                 }else {
                     console.log(`        - ${red(`${key}`)} only accepts ${expected.join(' or ')}, but you put ${value} (${got})!`);
                 }

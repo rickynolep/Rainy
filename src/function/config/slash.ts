@@ -45,13 +45,15 @@ export async function reloadSlash() {
     const currentUserDisabled = getDisabledCommands(userCommand);
     await reloadOsu();
 
-    if (getConfig().enablePing === false) {setSlash("user", 's-ping', false)} else {setSlash("user", 's-ping', true)};
-    if (getConfig().enableOsu === false) {setSlash("user", 's-osu', false)} else {setSlash("user", 's-osu', true)};
     if (getConfig().enableAfk === false) {setSlash("user", 's-afk', false)} else {setSlash("user", 's-afk', true)};
-
+    // if (getConfig().enableCatbox === false) {setSlash("user", 's-catbox', false)} else {setSlash("user", 's-catbox', true)};
+    if (getConfig().enableNeko === false) {setSlash("user", 's-neko', false)} else {setSlash("user", 's-neko', true)};
+    if (getConfig().enableOsu === false) {setSlash("user", 's-osu', false)} else {setSlash("user", 's-osu', true)};
+    if (getConfig().enablePing === false) {setSlash("user", 's-ping', false)} else {setSlash("user", 's-ping', true)};
+    
     if (JSON.stringify(currentAdminDisabled) !== JSON.stringify(lastAdminDisabled) || 
     JSON.stringify(currentUserDisabled) !== JSON.stringify(lastUserDisabled) || typeof firstCheck! === 'undefined') {
-        if (getConfig().verbose) {console.log(dim('[I] Checking slash...'))};
+        if (getConfig().verbose) {console.log(dim('[I] Checking application (/) commands...'))};
         lastAdminDisabled = currentAdminDisabled;
         lastUserDisabled = currentUserDisabled;
         await deploySlash();

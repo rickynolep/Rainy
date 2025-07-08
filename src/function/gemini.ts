@@ -5,30 +5,24 @@ import { GeminiConfig } from '../types/global.js';
 
 let chatModel = getConfig().chatModel
 
-export default async function gemini(data: Object, type: string, tries = 1): Promise<string> {
+export default async function gemini(data: Object, type: 'chat' | 'afk' | 'afkSet',  afkTime?: string, afkReason?: string, tries = 1): Promise<string> {
     try {
         let result: string = '';
         const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_KEY });
         const model = chatModel;
-        const contents = data;
+        let contents = data;
         let config: GeminiConfig = { responseMimeType: 'text/plain', systemInstruction: [{ text: `` }]};
         const personality = fs.readFileSync('./personality.txt', 'utf8');
-        if (type === 'define') {
-            config.systemInstruction = [
-                {
-                    text: `You are a girl in a Discord server, your name is Rainy. Define whether you should use Google Search or not. Your answer should be like this:
-                    Kamu adalah seorang cewe di Discord server, namamu Rainy. Tentukan apakah kamu harus make Google Search ato engga. Jawabanmu harusnya kaya gini: 
 
-                    Search: Yes / No
-                    Language: English / Indonesia,`
-                }
-            ];
-        } else if (type === 'chat') {
+        // Define function is deleted, but will be replaced, TO DO!
+        
+        if (type === 'chat') {
             config.thinkingConfig = { thinkingBudget: 0 };
             config.systemInstruction = [{ text: personality }];
-        } else {
-            config.systemInstruction = [{ text: 'Throw UNKNOWN Response'}];
-            console.log('unknown type function!' + type);
+        } else if (type === 'afk') {
+            config.systemInstruction = [{ text: personality + `\n\n This user was afk since ${afkTime}, greet him with a welcome message!`}];
+        } else if (type === 'afkSet') {
+            config.systemInstruction = [{ text: personality + `\n\n This user is going to AFK for reason: ${afkReason}, say that you going to remind anyone that trying to call him and also a goodbye message!`}];
         }
 
         const response = await ai.models.generateContentStream({ model, config, contents });
@@ -42,7 +36,7 @@ export default async function gemini(data: Object, type: string, tries = 1): Pro
             console.error(e);
         }
         if (tries < 3) {
-            return await gemini(data, type, tries + 1);
+            return await gemini(data, type, afkTime, afkReason, tries++);
         }
         return `-# an error occured, retried ${tries} times`;
     }
