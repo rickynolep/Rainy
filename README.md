@@ -11,8 +11,8 @@ Rainy is a custom Discord Bot script typed in TypeScript with Discord.js and Gem
 Rainy adalah custom Discord Bot script yang diketik dalam Typescript dengan Discord.js dan Intergrasi Gemini AI untuk menjadi custom Official bot bagi server yang menggunakannya, Berharap agar server tersebut menjadi lebih seru dan hidup!
 
 ## Usage & Developtment
-To participate or use this project please read: README-EN.md <br>
-Untuk berpartisipasi atau menggunakan project ini harap baca: README-ID.md
+To participate or use this project please read: [README-EN.md](https://github.com/rickynolep/Rainy/blob/main/README-EN.md) <br>
+Untuk berpartisipasi atau menggunakan project ini harap baca: [README-ID.md](https://github.com/rickynolep/Rainy/blob/main/README-ID.md)
 
 <br>
 <p align=center>
