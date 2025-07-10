@@ -13,10 +13,6 @@ export default {
                 return;
             }
 
-            
-
-
-
             try {
                 await command.execute(interaction);
             } catch (error) {

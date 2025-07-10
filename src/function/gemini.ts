@@ -16,13 +16,13 @@ export default async function gemini(data: Object, type: 'chat' | 'afk' | 'afkSe
 
         // Define function is deleted, but will be replaced, TO DO!
         
+        config.thinkingConfig = { thinkingBudget: 0 };
         if (type === 'chat') {
-            config.thinkingConfig = { thinkingBudget: 0 };
             config.systemInstruction = [{ text: personality }];
         } else if (type === 'afk') {
-            config.systemInstruction = [{ text: personality + `\n\n This user was afk since ${afkTime}, greet him with a welcome message!`}];
+            config.systemInstruction = [{ text: `\n\n This user was afk since ${afkTime}, greet him with a welcome message!` + personality}];
         } else if (type === 'afkSet') {
-            config.systemInstruction = [{ text: personality + `\n\n This user is going to AFK for reason: ${afkReason}, say that you going to remind anyone that trying to call him and also a goodbye message!`}];
+            config.systemInstruction = [{ text: `\n\n This user is going to AFK for reason: ${afkReason}, say that you going to remind anyone that trying to call him and also a goodbye message!` + personality}];
         }
 
         const response = await ai.models.generateContentStream({ model, config, contents });

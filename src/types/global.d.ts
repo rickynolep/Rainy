@@ -1,4 +1,5 @@
 declare global {
+    var Runtime: 'bun' | 'node';
     var red: (text: string) => string;
     var dim: (text: string) => string;
     var green: (text: string) => string;

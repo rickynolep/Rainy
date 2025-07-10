@@ -23,6 +23,7 @@ async function watch() {
 export default {
     name: Events.ClientReady,
     async execute(client: any) {
+        await reloadConfig();
         await newStatus();
         await watch();
         console.log(green(`[I] Connected as ${client.user!.tag}`) );

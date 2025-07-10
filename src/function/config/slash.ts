@@ -1,10 +1,11 @@
 import fs from 'fs';
 import path from 'path';
 import { reloadOsu } from './osu.js';
-import { ext } from '../bootstrap.js';
-import { getConfig } from '../config.js';
+import { ext, getFileMeta } from '../../bootstrap.js';
+import { getConfig, reloadConfig } from '../config.js';
 import { deploySlash } from "../deploy.js";
 
+const { __dirname } = getFileMeta(import.meta);
 let lastAdminDisabled: string[] = [];
 let lastUserDisabled: string[] = [];
 let firstCheck: boolean;
@@ -39,12 +40,12 @@ function getDisabledCommands(commandsDir: string): string[] {
 }
 
 export async function reloadSlash() {
+    await reloadOsu();
     const adminCommand = path.resolve(__dirname, '../', '../', 'commands');
     const userCommand = path.resolve(__dirname, '../', '../', 'commands');
     const currentAdminDisabled = getDisabledCommands(adminCommand);
     const currentUserDisabled = getDisabledCommands(userCommand);
-    await reloadOsu();
-
+    
     if (getConfig().enableAfk === false) {setSlash("user", 's-afk', false)} else {setSlash("user", 's-afk', true)};
     // if (getConfig().enableCatbox === false) {setSlash("user", 's-catbox', false)} else {setSlash("user", 's-catbox', true)};
     if (getConfig().enableNeko === false) {setSlash("user", 's-neko', false)} else {setSlash("user", 's-neko', true)};
@@ -56,6 +57,7 @@ export async function reloadSlash() {
         if (getConfig().verbose) {console.log(dim('[I] Checking application (/) commands...'))};
         lastAdminDisabled = currentAdminDisabled;
         lastUserDisabled = currentUserDisabled;
+        await reloadConfig();
         await deploySlash();
         firstCheck = false
     }

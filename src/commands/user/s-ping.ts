@@ -1,6 +1,7 @@
 import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import convertTime from '../../function/tools/convertTime.js';
-import medianColor from '../../function/tools/medianColor.js';
+import { getAverageColor } from 'fast-average-color-node';
+
 
 export default { 
 	data: new SlashCommandBuilder()
@@ -18,7 +19,8 @@ export default {
             `Kecepatan respon bot saat ini: ${latency} ms\n` +
             `Bot berjalan selama: ${convertTime(uptime, 'time')}\n`
         );
-        const color: any = await medianColor(interaction.client.user.displayAvatarURL(), 'hex')
+        
+        const color: any = (await getAverageColor(interaction.client.user.displayAvatarURL())).hex
         const embed = new EmbedBuilder()
             .setTitle(`Pong!`)
             .setDescription(reply)

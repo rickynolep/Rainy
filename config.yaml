@@ -6,7 +6,7 @@ verbose: true
 # Note that depenency checking cannot be hidden because it's a bootstrap of the system.
 
 compatibilityMode: false
-# Will disable config check, set to true if your vps can't run the script. Default: false
+# Will disable config check, set to true if your vps stuck at 'Reloading all configurations...'. Default: false
 # What it does: disable readline, that's it..
 
 
@@ -14,7 +14,7 @@ compatibilityMode: false
 # ============={ Bot Status Configurations }==============
 
 status: Idle
-# Show bot status such as Online, Idle, DnD, or Invisible (This will be overwritten by Streaming activity if set). Default: Online
+# Show bot status such as Online, Idle, DoNotDisturb, or Invisible (This will be overwritten by Streaming activity if set). Default: Online
 
 activity: Listening
 # Show bot status such as Listening, Streaming, Watching, Playing, and Competing. set false to disable
@@ -22,7 +22,7 @@ activity: Listening
 statusText: You ( ｡•̀ᴗ- ) ✧
 # Show bot custom status text, activity must also be false if you want to disable this. set false to disable
 
-statusSubText: Running v2.25.7.08
+statusSubText: Running v2.25.7.10
 # Show second bot custom status text, both statusText and activity must be enabled for this to work. set false to disable
 
 statusUrl: https://www.twitch.tv/lofigirl
@@ -35,7 +35,7 @@ statusUrl: https://www.twitch.tv/lofigirl
 AI: true
 # Define if AI Features should be enabled or not. if disabled, will affect ALL FEATURES that include AI and stop Chat monitoring
 
-slashAI: false
+slashAI: true
 # Allow AI to also interact on supported slash command. set false to Decline
 # Supported slash command: (To Do!) PLEASE DO NOT ENABLE THIS FOR NOW!
 
@@ -97,6 +97,7 @@ enableOsu: true
 # osu! is a rythmn game, this intergrations allow user to fetch info from osu!
 
 enableNeko: true
+
 # Define if Nekosia intergrations is enabled or not. True/False
 # Nekosia is a image board filled with catgirls, this allow user to get random image of catgirls
 

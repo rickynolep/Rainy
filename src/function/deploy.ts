@@ -1,11 +1,14 @@
 import fs from 'fs';
 import path from 'path';
-import { ext } from './bootstrap.js';
-import { getConfig } from './config.js';
+import { ext, getFileMeta } from '../bootstrap.js';
+import { getConfig, reloadConfig } from './config.js';
 import { REST, Routes } from 'discord.js';
 import type { APIApplicationCommand } from 'discord-api-types/v10';
+import { pathToFileURL } from 'url';
 
+const { __dirname } = getFileMeta(import.meta);
 export async function deploySlash() {
+    await reloadConfig();
     const commands = [];
     const disabledFiles = [];
     const foldersPath = path.join(__dirname, '../commands');
@@ -21,7 +24,8 @@ export async function deploySlash() {
             }
             if (!commandFiles.includes(file)) continue;
             const filePath = path.join(commandsPath, file);
-            const rawCommand = await import(filePath);
+            const fileUrl = pathToFileURL(filePath).href;
+            const rawCommand = await import(fileUrl);
             const command = rawCommand.default || rawCommand;
             if ('data' in command && 'execute' in command) {
                 commands.push(command.data.toJSON())

@@ -65,15 +65,19 @@ export default {
                 handleChat(editMessage);
                 return;
             }
-
-            // AFK Handler
-            const cachePath = path.join(process.cwd(), 'cache', 'servers', `${message.guildId}`);
-            try {await access(cachePath, constants.F_OK)} catch {return};
-            const afkFile = path.join(cachePath, 'afk.json');
-            const afkData = JSON.parse(await readFile(afkFile, 'utf-8'));
-            const afkTime = timeConvert(afkData[message.id].afkDate, 'date');
+            
+            // AFK Handler (Welcome back)
+            let afkData: any;
+            try {
+                const cachePath = path.join(process.cwd(), 'cache', 'servers', `${message.guildId}`);
+                await access(cachePath, constants.F_OK);
+                const afkFile = path.join(cachePath, 'afk.json');
+                afkData = JSON.parse(await readFile(afkFile, 'utf-8'));
+            } catch { return };
+            
             let response: any;
             if (afkData[message.id] === message.member!.id) {
+                const afkTime = timeConvert(afkData[message.member!.id].afkDate, 'date');
                 if (config.slashAI === true) {response = await gemini(date, 'afk', afkTime)}
                 else {response = `Selamat datang kembali, ${message.member?.displayName}`}
                 const reply = await message.reply({ content: response, allowedMentions: { repliedUser: false } });

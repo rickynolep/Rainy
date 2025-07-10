@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import dotenv from 'dotenv';
 import { pathToFileURL } from 'url';
-import { ext } from './function/bootstrap.js';
+import { ext, getFileMeta } from './bootstrap.js';
 import { Client, GatewayIntentBits, Collection } from 'discord.js';
 dotenv.config({ path: path.join(process.cwd(), '.env'), quiet: true });
 
@@ -16,6 +16,7 @@ const client = new Client({
     ],
 }); 
 
+const { __dirname } = getFileMeta(import.meta)
 export { client };
 export async function main() {
     try {

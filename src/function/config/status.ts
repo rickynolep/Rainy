@@ -68,9 +68,10 @@ export async function reloadStatus() {
         if (statusUrl !== false && activityType === ActivityType.Streaming) presence!.url = statusUrl;
     }
 
+    presenceStatus = statusMap[status as string]
     if (!statusMap[status]) {
         console.warn(yellow('[W] Invalid status format! Falling back to Online.'));
-        modifyConfig((doc) => { doc.set('status', 'Online'); });
+        await modifyConfig((doc) => { doc.set('status', 'Online') });
     }
 
     newActivityKey = JSON.stringify(presence);

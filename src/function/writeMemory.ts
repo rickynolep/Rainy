@@ -1,7 +1,8 @@
 import path from 'path';
 import { constants } from 'fs';
 import { access, mkdir, readFile, writeFile } from 'fs/promises';
-import convertMention from './tools/convertMention';
+import convertMention from './tools/convertMention.js';
+import { getConfig } from './config.js';
 
 export default async function writeMemory(message: any, role: 'user' | 'model' ) {
     try {
@@ -23,7 +24,7 @@ export default async function writeMemory(message: any, role: 'user' | 'model' )
             await access(cachePath, constants.F_OK);
         } catch { 
             await mkdir(cachePath, { recursive: true });
-            console.log('\x1b[2m%s\x1b[0m', '[I] Creating cache folder...');
+            if(getConfig().verbose) {console.log(dim('[I] Creating chats cache...'))};
         }
 
         try {

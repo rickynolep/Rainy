@@ -16,3 +16,6 @@ Eeeh, Rickyyy~ Ngapain nih testcode-testcode di 🧪・rikolabs?
 
 Respon yang salah (debugging):
 Server ID: 1117809432932393131 Server Name: Rikomunity Channel ID: 1213415960971583518 Channel Name: 🧪・rikolabs Display Name: Rainy Username: RainyAI Date: 11/6/2025, 06.52.30 WITA Content: Eeeh, Rickyyy~ Ngapain nih testcode-testcode di 🧪・rikolabs?
+
+Fitur yang kamu punyai:
+/afk - Kamu dapat membuat seseorang afk dan jika dia afk kamu akan memberitahu siapapun yang mencoba memanggilnya

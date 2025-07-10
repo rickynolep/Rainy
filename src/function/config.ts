@@ -7,6 +7,15 @@ import { parseDocument, Document } from 'yaml';
 import { reloadSlash } from './config/slash.js';
 import { reloadStatus } from './config/status.js';
 import type { Config } from '../types/global.js';
+if (!process.env.DISCORD_TOKEN) {
+        console.log(`Environment keys is missing (Discord Token) \nCreate new ".env" or import your env with these variable:\n`, `  
+        DISCORD_TOKEN = "MTxxxxxxxxxxxxxxxxxx"  - [Your Discord Token]
+        GEMINI_KEY = "AIxxxxxxxx"               - [Your Gemini Key]
+        CLIENT_ID = "13xxxxxxxx"                - [Your Discord Client ID]
+        OSU_CLIENT = "xxxxx"                    - [Your Osu Client ID] (optional)
+        OSU_SECRET = "1xxxxxxxxxx"              - [Your Osu Secret] (optional)\n`
+        ); process.exit(1)
+}; 
 
 let confPath = path.join(process.cwd(), 'config.yaml');
 let lastconfig: any; let config: Config
@@ -218,12 +227,10 @@ export function getConfig(): Config {
     return config;
 };
 
-export function modifyConfig(modifier: (doc: Document.Parsed) => void) {
+export async function modifyConfig(modifier: (doc: Document.Parsed) => void) {
     const raw = fs.readFileSync(confPath, 'utf8');
     const doc = parseDocument(raw);
     modifier(doc);
     fs.writeFileSync(confPath, String(doc), 'utf8');
-    reloadConfig();
-}
-
-await reloadConfig();
+    await reloadConfig();
+};

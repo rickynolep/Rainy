@@ -1,9 +1,10 @@
 import fs from 'fs';
 import path from 'path';
-import { ext } from '../bootstrap.js';
+import { ext, getFileMeta } from '../../bootstrap.js';
 import { getConfig } from '../config.js';
 
 function setAI(set: boolean) {
+    const { __dirname } = getFileMeta(import.meta);
     const disablePath = `${path.resolve(__dirname, `../../function/chat.${ext}`)}.disabled`
     const enablePath = path.resolve(__dirname, `../../function/chat.${ext}`);
 

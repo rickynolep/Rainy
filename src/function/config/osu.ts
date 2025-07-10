@@ -1,9 +1,10 @@
 import fs from 'fs';
 import path from 'path';
 import readline from 'readline';
-import { ext } from '../bootstrap.js';
+import { ext, getFileMeta } from '../../bootstrap.js';
 import { getConfig, modifyConfig } from '../config.js';
 
+const { __dirname } = getFileMeta(import.meta);
 const osuCommandPath = path.resolve(__dirname, `../commands/user/s-osu.${ext}`);
 const osuDisabledPath = osuCommandPath + '.disabled';
 let running = false;

@@ -1,9 +1,10 @@
+import { reloadConfig } from './function/config.js';
 import { main } from './main.js';
 
 (async () => {
     try {
-        await import('./function/bootstrap.js');
-        await import('./function/config.js');
+        await import('./bootstrap.js');
+        await reloadConfig();
         await main();
     } catch (e) {
         console.error(e);
