@@ -22,7 +22,7 @@ activity: Listening
 statusText: You ( ｡•̀ᴗ- ) ✧
 # Show bot custom status text, activity must also be false if you want to disable this. set false to disable
 
-statusSubText: Running v2.25.7.10
+statusSubText: Running v2.25.7.16
 # Show second bot custom status text, both statusText and activity must be enabled for this to work. set false to disable
 
 statusUrl: https://www.twitch.tv/lofigirl
@@ -66,13 +66,31 @@ alwaysIgnoreSymbol: '-#'
 
 
 # ================={ Confess Command }====================
+# This feature is on TO DO list
 
-# enableConfess: true // TO DO!
+
+# enableConfess: (NOT AVAILABLE)
 # Define if /confess is enabled or not. True/false
 
-# confessAllowImage: true // TO DO!
+# confessAllowImage: (NOT AVAILABLE)
 # Allow uploading image to confession, This require enableCatbox to work properly!
 
+
+
+# =================={ Bump Reminder }=====================
+# This is a BETA feature
+# Supported flags: ${user} = Mention last user that execute /bump
+
+
+enableBump: Static
+# Define if bump reminder is enabled or not. False/Static (BETA)
+# AI is not available right now, If this option changed other than static will result bump disabled internally
+
+bumpTriggeredMsg: Arigatou sudah ngebump!
+# Message that appears when user sucessfully bumped the server. This will ignored if enableBump is set to AI
+
+bumpReminderMsg: Anone anone, Waktunya ngebump ${user}!
+# Message that appears when time for another bump is arrived. This will ignored if enableBump set to AI
 
 
 # =================={ Slash Commands }====================
@@ -80,9 +98,8 @@ alwaysIgnoreSymbol: '-#'
 enablePing: true
 # Define if /ping is enabled or not. True/False
 
-enableAfk: false
+enableAfk: true
 # Define if /afk is enabled or not. True/False
-# THIS IS STILL UNDER DEVELOPTMENT AND WILL DO BASICALLY NOTHING YET!!
 
 # enableStickyMsg: true // TO DO
 # Define if /stickyMsg is enabled or not. True/False
@@ -97,9 +114,9 @@ enableOsu: true
 # osu! is a rythmn game, this intergrations allow user to fetch info from osu!
 
 enableNeko: true
-
 # Define if Nekosia intergrations is enabled or not. True/False
 # Nekosia is a image board filled with catgirls, this allow user to get random image of catgirls
+# Due to bug, when using /neko on direct chat the image seems to be missing, until the bug is fixed nekosia not available on direct chat!
 
 # enableCatbox: true // TO DO!
 # Define if Catbox intergrations is enabled or not. True/False

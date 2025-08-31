@@ -16,7 +16,9 @@ export default async function writeMemory(message: any, role: 'user' | 'model' )
             ]
         }
 
-        const cachePath = path.join(process.cwd(), 'cache', 'servers', `${message.guildId}`);
+        let cachePath;
+        if (message.channel.type === 1) cachePath = path.join(process.cwd(), 'cache', 'chats', `${message.author.id}`)
+        else cachePath = path.join(process.cwd(), 'cache', 'servers', `${message.guildId}`);
         const historyFile = path.join(cachePath, 'chats.json');
         let existingData: any [] = [];
 

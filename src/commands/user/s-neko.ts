@@ -1,11 +1,12 @@
 import { ofetch } from 'ofetch';
 import { randomInt } from 'crypto';
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder, InteractionContextType, SlashCommandBuilder } from 'discord.js';
 
 export default { 
 	data: new SlashCommandBuilder()
 		.setName('neko')
-		.setDescription('Fetch a random catgirl image, meow..'),
+		.setDescription('Fetch a random catgirl image, meow..')
+        .setContexts(InteractionContextType.Guild),
 	async execute(interaction: ChatInputCommandInteraction) {
         let nekores;
         try {nekores = await ofetch('https://api.nekosia.cat/api/v1/images/catgirl')} 
@@ -32,10 +33,11 @@ export default {
             `${character}` +
             `-# Tags: ${nekores.tags.join(', ')}`
         );
+
         const embed = new EmbedBuilder()
             .setTitle(noises[randomInt(15)])
             .setDescription(desc)
-            .setImage(nekores.image.original.url)
+            .setImage(nekores.image.compressed.url)
             .setFooter({ text: `Nekosia ${nekores.attribution.copyright}`, iconURL: `https://files.catbox.moe/n9h30p.png`})
             .setColor(nekores.colors.main);
 
@@ -51,7 +53,6 @@ export default {
 
 		const row = new ActionRowBuilder()
 			.addComponents(source, download);
-        
         interaction.reply({ embeds: [embed], components: [row.toJSON()] })
 	}
 };

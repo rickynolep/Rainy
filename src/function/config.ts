@@ -27,7 +27,7 @@ export async function reloadConfig() {
 
     const configSchema: Record<string, {
             types: string[], 
-            category: 'system' | 'status' | 'ai' | 'autorespond' | 'slash'
+            category: 'system' | 'status' | 'ai' | 'autorespond' | 'bump' | 'slash'
     }> = {
         verbose: { 
             types: ['boolean'], 
@@ -88,6 +88,18 @@ export async function reloadConfig() {
         alwaysIgnoreSymbol: { 
             types: ['string'],
             category: 'autorespond' 
+        },
+        enableBump: { 
+            types: ['string', 'false'],
+            category: 'bump' 
+        },
+        bumpTriggeredMsg: {
+            types: ['string'],
+            category: 'bump'
+        },
+        bumpReminderMsg: {
+            types: ['string'],
+            category: 'bump'
         },
         enablePing: { 
             types: ['boolean'],
@@ -186,9 +198,9 @@ export async function reloadConfig() {
                     console.log(`        - ${red(`${key}`)} can only be a set of text or false, but you put ${value} (${got})!`);
                 } else if (deepEqual(expected, ['object', 'numberset', 'false'])) {
                     console.log(`        - ${red(`${key}`)} can only be a set of text and number or false, but you put ${value} (${got})!`);
-                }else if (deepEqual(expected, ['numberset', 'false'])) {
+                } else if (deepEqual(expected, ['numberset', 'false'])) {
                     console.log(`        - ${red(`${key}`)} can only be a set of number or false, but you put ${value} (${got})!`);
-                }else {
+                } else {
                     console.log(`        - ${red(`${key}`)} only accepts ${expected.join(' or ')}, but you put ${value} (${got})!`);
                 }
             }

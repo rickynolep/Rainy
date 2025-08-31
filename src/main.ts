@@ -3,7 +3,7 @@ import path from 'path';
 import dotenv from 'dotenv';
 import { pathToFileURL } from 'url';
 import { ext, getFileMeta } from './bootstrap.js';
-import { Client, GatewayIntentBits, Collection } from 'discord.js';
+import { Client, GatewayIntentBits, Collection, Partials } from 'discord.js';
 dotenv.config({ path: path.join(process.cwd(), '.env'), quiet: true });
 
 const client = new Client({
@@ -12,8 +12,15 @@ const client = new Client({
         GatewayIntentBits.GuildMembers,
         GatewayIntentBits.GuildMessages,
         GatewayIntentBits.GuildPresences,
-        GatewayIntentBits.MessageContent
+        GatewayIntentBits.MessageContent,
+        GatewayIntentBits.DirectMessages,
+        GatewayIntentBits.DirectMessageTyping
     ],
+    partials: [ 
+        Partials.Message, 
+        Partials.Channel, 
+        Partials.Reaction
+    ]
 }); 
 
 const { __dirname } = getFileMeta(import.meta)
